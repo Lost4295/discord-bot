@@ -11,6 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "discord.js": "^14.14.1",
-    "discord.js-commando": "github:discordjs/Commando"
+    "mysql": "^2.18.1"
   }
 }

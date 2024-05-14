@@ -1,0 +1,12 @@
+/connect -> Notifier sa présence, dans les temps dans un salon, en répondant à une question random
+/getpts -> Récupérer le nombre de points de l'utilisateur
+/leaderboard -> Récupérer le classement des utilisateurs (à voir)
+/settings -> Récupérer les paramètres de l'utilisateur (en accord avec leaderboard) 
+/kick -> Kick un utilisateur
+/ban -> Ban un utilisateur
+/timeout -> Timeout un utilisateur
+/warn -> Warn un utilisateur
+/pingbdd -> Ping la base de données
+/dates -> Récupérer les dates des événements la base de données
+/nextevent -> Récupérer la date du prochain événement
+/register -> Enregistrer un utilisateur (nom, prénom, classe, )
