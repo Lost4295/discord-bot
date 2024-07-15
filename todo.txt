@@ -1,12 +1,33 @@
+---- TOUT LE MONDE ----
+
+/help -> Récupérer les commandes disponibles
 /connect -> Notifier sa présence, dans les temps dans un salon, en répondant à une question random
 /getpts -> Récupérer le nombre de points de l'utilisateur
 /leaderboard -> Récupérer le classement des utilisateurs (à voir)
 /settings -> Récupérer les paramètres de l'utilisateur (en accord avec leaderboard) 
+/dates -> Récupérer les dates des événements dans la base de données
+/nextevent -> Récupérer la date du prochain événement
+/newquestion -> Ajouter une question à la base de données
+
+---- ADMIN ----
+
+/block -> Bloquer un utilisateur
+/unblock -> Débloquer un utilisateur
+
+/checkquestions (adm) -> Vérifier les questions de la base de données
+
+---- OK ----
+/timeout -> Timeout un utilisateur
+/untimeout -> Untimeout un utilisateur
+/softban -> Softban un utilisateur
+/unban -> Unban un utilisateur
+/warn -> Warn un utilisateur
+/register -> Enregistrer un utilisateur (nom, prénom, classe)
+/pingbdd -> Ping la base de données
+/me -> Récupérer les informations de l'utilisateur inscrit
+/ping -> Ping le bot (pour vérifier qu'il est en ligne)
 /kick -> Kick un utilisateur
 /ban -> Ban un utilisateur
-/timeout -> Timeout un utilisateur
-/warn -> Warn un utilisateur
-/pingbdd -> Ping la base de données
-/dates -> Récupérer les dates des événements la base de données
-/nextevent -> Récupérer la date du prochain événement
-/register -> Enregistrer un utilisateur (nom, prénom, classe, )
+/server -> Récupérer les informations du serveur
+/user -> Récupérer les informations de l'utilisateur
+/help -> Récupérer les commandes disponibles
