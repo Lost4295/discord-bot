@@ -1,33 +1,39 @@
+
+datechecker -> Envoyer un message si la date est enregistrée comme ayant une session
+
 ---- TOUT LE MONDE ----
 
 /help -> Récupérer les commandes disponibles
 /connect -> Notifier sa présence, dans les temps dans un salon, en répondant à une question random
-/getpts -> Récupérer le nombre de points de l'utilisateur
-/leaderboard -> Récupérer le classement des utilisateurs (à voir)
-/settings -> Récupérer les paramètres de l'utilisateur (en accord avec leaderboard) 
-/dates -> Récupérer les dates des événements dans la base de données
-/nextevent -> Récupérer la date du prochain événement
-/newquestion -> Ajouter une question à la base de données
+/newquestion -> Proposer une question à la base de données
 
 ---- ADMIN ----
 
+/checkimages (adm) -> Vérifier les images de la base de données
 /block -> Bloquer un utilisateur
 /unblock -> Débloquer un utilisateur
-
 /checkquestions (adm) -> Vérifier les questions de la base de données
-
 ---- OK ----
-/timeout -> Timeout un utilisateur
-/untimeout -> Untimeout un utilisateur
-/softban -> Softban un utilisateur
-/unban -> Unban un utilisateur
-/warn -> Warn un utilisateur
-/register -> Enregistrer un utilisateur (nom, prénom, classe)
-/pingbdd -> Ping la base de données
-/me -> Récupérer les informations de l'utilisateur inscrit
-/ping -> Ping le bot (pour vérifier qu'il est en ligne)
-/kick -> Kick un utilisateur
+
+/addpts -> Ajouter des points à un utilisateur
+/allactions -> Avoir un message avec tous les points 
 /ban -> Ban un utilisateur
-/server -> Récupérer les informations du serveur
-/user -> Récupérer les informations de l'utilisateur
+/changebot -> Changer le bot 
+/createdate -> Créer une date pour un événement
+/dates -> Récupérer les dates des événements dans la base de données
+/getpts -> Récupérer le nombre de points de l'utilisateur
 /help -> Récupérer les commandes disponibles
+/kick -> Kick un utilisateur
+/leaderboard -> Récupérer le classement des utilisateurs (à voir)
+/me -> Récupérer les informations de l'utilisateur inscrit
+/nextevent -> Récupérer la date du prochain événement
+/ping -> Ping le bot (pour vérifier qu'il est en ligne)
+/pingbdd -> Ping la base de données
+/register -> Enregistrer un utilisateur (nom, prénom, classe)
+/removepts -> Retirer des points à un utilisateur
+/settings -> Récupérer les paramètres de l'utilisateur (en accord avec leaderboard) 
+/softban -> Softban un utilisateur
+/timeout -> Timeout un utilisateur
+/unban -> Unban un utilisateur
+/untimeout -> Untimeout un utilisateur
+/warn -> Warn un utilisateur

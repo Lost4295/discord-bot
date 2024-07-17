@@ -25,7 +25,7 @@ module.exports = {
         });
         connection.connect();
         connection.query(
-            'UPDATE USERS SET warns = (SELECT warns FROMS users where user_id = ?) + 1 WHERE user_id = ?',
+            'UPDATE USERS SET warns = warns + 1 WHERE user_id = ?',
             [cible.id, cible.id],
             async function (error, results, fields) {
                 if (error) throw error;

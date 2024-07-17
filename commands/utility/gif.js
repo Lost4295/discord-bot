@@ -12,9 +12,13 @@ module.exports = {
                     { name: 'Funny', value: 'gif_funny' },
                     { name: 'Meme', value: 'gif_meme' },
                     { name: 'Movie', value: 'gif_movie' },
-                )),
+                ))
+                .addAttachmentOption(option =>
+                    option.setName('image')
+                        .setDescription('An image that certifies the presence in distance learning.')),
     async execute(interaction) {
         const category = interaction.options.getString('category');
+        const img = interaction.options.getAttachment('image');
         let url = '';
         switch (category) {
             case 'gif_funny':
@@ -27,6 +31,7 @@ module.exports = {
                 url = 'https://giphy.com/gifs/movie-film-3o6Zt7WfF6y5Zn8F4I';
                 break;
         }
+        console.log(img.url)
         await interaction.reply(url);
     }
 };
