@@ -20,15 +20,16 @@ module.exports = {
 			database: 'bot'
 		});
 		connection.connect();
-		connection.query("SELECT * FROM dates WHERE date > NOW() ORDER BY date ASC LIMIT 1", async function (error, results, fields) {
+		connection.query("SELECT * FROM dates WHERE date > NOW() OR NOW() - date < 8*60*60*1000 ORDER BY date ASC LIMIT 1", async function (error, results, fields) {
 			if (error) throw error;
 			if (results.length == 0) {
 				await interaction.reply('Aucun événement n\'est prévu pour le moment.');
 			} else {
 				var now = new Date();
 				var date = new Date(results[0].date);
-				var diff = date - now;
-				if (diff < 8 * 60 * 60 * 1000) {
+				var diff = now - date;
+				console.log(diff, date, now, results[0].date);
+				if (diff > 8 * 60 * 60 * 1000) {
 					await interaction.reply('L\'événement est déjà passé.');
 				} else {
 					connection.query('SELECT * FROM users where user_id = ' + interaction.user.id, async function (error, results, fields) {
@@ -39,13 +40,14 @@ module.exports = {
 						} else {
 							if (img != null) {
 								connection.query(
-									'INSERT INTO presence (user_id, image) VALUES (?, ?)',
+									'INSERT INTO images (user_id, image) VALUES (?, ?)',
 									[interaction.user.id, img.url],
 									async function (error, results, fields) {
 										if (error) {
-											await interaction.reply({ content: 'Il y a eu une erreur lors de l\'envoi de votre image. Merci de contacter l\'un des administrateurs.', ephemeral: true });
+											console.log(error);
+											await interaction.channel.send({ content: 'Il y a eu une erreur lors de l\'envoi de votre image. Merci de contacter l\'un des administrateurs.', ephemeral: true });
 										} else {
-											await interaction.reply({ content: 'Votre image a bien été envoyée !', ephemeral: true });
+											await interaction.channel.send({ content: 'Votre image a bien été envoyée !', ephemeral: true });
 										}
 									});
 							}

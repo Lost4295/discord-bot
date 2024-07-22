@@ -81,7 +81,7 @@ module.exports = {
 			database: 'bot'
 		});
 		connection.connect();
-		connection.query('UPDATE users SET visibility = 0 WHERE user_id =' + interaction.user.id, async function (error, results, fields) {
+		connection.query('SELECT * FROM users WHERE user_id =' + interaction.user.id, async function (error, results, fields) {
 			if (error) {
 				await interaction.reply('Vous n\'êtes pas inscrit dans la base de données de Couch Bot.');
 			} else {

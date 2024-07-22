@@ -4,17 +4,19 @@ datechecker -> Envoyer un message si la date est enregistrée comme ayant une se
 ---- TOUT LE MONDE ----
 
 /help -> Récupérer les commandes disponibles
-/connect -> Notifier sa présence, dans les temps dans un salon, en répondant à une question random
 /newquestion -> Proposer une question à la base de données
 
 ---- ADMIN ----
 
-/checkimages (adm) -> Vérifier les images de la base de données
-/block -> Bloquer un utilisateur
-/unblock -> Débloquer un utilisateur
 /checkquestions (adm) -> Vérifier les questions de la base de données
+
 ---- OK ----
 
+/checkimages (adm) -> Vérifier les images de la base de données
+/unblock -> Débloquer un utilisateur
+/block -> Bloquer un utilisateur
+/invite -> Inviter un utilisateur
+/connect -> Notifier sa présence, dans les temps dans un salon, en répondant à une question random
 /addpts -> Ajouter des points à un utilisateur
 /allactions -> Avoir un message avec tous les points 
 /ban -> Ban un utilisateur

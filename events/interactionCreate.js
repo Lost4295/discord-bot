@@ -88,7 +88,17 @@ module.exports = {
 			try {
 				console.log(
 					`/${interaction.commandName} — Par ${interaction.user.username}`)
-				await command.execute(interaction);
+					connection.query('SELECT user_id FROM blocked_users', async function (error, results, fields) {
+						if (error) throw error;
+						for (let i = 0; i < results.length; i++) {
+							console.log(results[i].user_id, interaction.user.id, results[i].user_id == interaction.user.id);
+							if (results[i].user_id == interaction.user.id) {
+								await interaction.reply({ content: 'Vous êtes bloqué.', ephemeral: true });
+								return;
+							}
+						}
+						await command.execute(interaction);
+					});
 			} catch (error) {
 				console.error(error);
 				if (interaction.replied || interaction.deferred) {

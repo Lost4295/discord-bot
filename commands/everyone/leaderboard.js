@@ -25,7 +25,7 @@ module.exports = {
 				.setColor('#0099ff');
 			let len = resultats.length > 5 ? 5 : resultats.length;
 			if (len == 0) {
-				embed.addFields({ name: 'Aucun joueur', value: 'Aucun joueur n\'a encore de points.' });
+				embed.addFields({ name: 'Pas de joueur', value: 'Aucun joueur n\'a encore de points et les a rendu publics.' });
 			}
 			for (let i = 0; i < len; i++) {
 				embed.addFields({ name: ` #${i + 1} ${resultats[i].pseudo}`, value: `Points : ${resultats[i].points}` });
@@ -39,7 +39,7 @@ module.exports = {
 					if (error) throw error;
 					let position = 0;
 					for (let i = 0; i < aa.length; i++) {
-						if (resultats[i].user_id == interaction.user.id) {
+						if (aa[i].user_id == interaction.user.id) {
 							position = i + 1;
 							break;
 						}

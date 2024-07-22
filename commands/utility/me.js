@@ -4,7 +4,7 @@ const { PASS, USER } = require('../../config.json');
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('me')
-		.setDescription('Répond avec Pong!'),
+		.setDescription('Vous donne des infomations sur vous.'),
 	async execute(interaction) {
 		var mysql = require('mysql');
 		var connection = mysql.createConnection({
@@ -31,7 +31,7 @@ module.exports = {
 		// .addFields({ name: 'Inline field title', value: 'Some value here', inline: true })
 		// .setImage('https://i.imgur.com/AfFp7pu.png')
 		.setTimestamp()
-		.setFooter({ text: 'Couch Bot' });
+		.setFooter({ text: 'Couch Bot - Pour modifier vos informations, lancer /settings' });
 	// .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
 		connection.connect();
 		connection.query('SELECT * FROM users where user_id = '+ interaction.user.id, async function (error, results, fields) {
