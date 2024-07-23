@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChannelType } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { USER, PASS } = require('../../config.json');
 
 
@@ -9,7 +9,8 @@ module.exports = {
         .addStringOption(option =>
             option.setName('message')
                 .setDescription('Le message que vous voulez envoyer.')
-                .setRequired(true)),
+                .setRequired(true))
+                .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
         const message = interaction.options.getString('message');
         var mysql = require('mysql');

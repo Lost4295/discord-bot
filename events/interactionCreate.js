@@ -27,6 +27,12 @@ module.exports = {
 		// if (n == 1) {
 		// 	return;
 		// }
+		connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results, fields) {
+			if (error) throw error;
+			if (results.length == 0){
+				await interaction.client.channels.cache.get(interaction.channel.id).send("Attention, vous n'avez **PAS** défini de salon où envoyer les messages. Lancez la commande **__/setup__**, ou demandez à un administrateur de le faire ! ")}
+		})
+
 		if (interaction.isModalSubmit()) {
 			if (interaction.customId === 'inscription') {
 				const firstname = interaction.fields.getTextInputValue('firstname')

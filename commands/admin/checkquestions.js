@@ -85,7 +85,7 @@ module.exports = {
 		}
 		if (interaction.options.getSubcommand() === 'validate') {
 			const id = interaction.options.getString('id');
-			connection.query('UPDATE questions SET verified = ? AND ok = ? WHERE user_id = ?', [id, 1, interaction.user.id], async function (error, results, fields) {
+			connection.query('UPDATE questions SET verified = ? AND valid = ? WHERE user_id = ?', [id, 1, interaction.user.id], async function (error, results, fields) {
 				if (error) throw error;
 				console.log(results);
 				connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [interaction.user.id], async function (error, results, fields) {
@@ -101,6 +101,7 @@ module.exports = {
 					console.log(results);
 					if (results.length > 0) {
 						await interaction.client.channels.cache.get(results[0].value).send('<@' + interaction.user.id + '>, votre question a été validée. Vous avez gagné 0.2 points !');
+						await interaction.reply('La réponse a été envoyée dans le salon correspondant.')
 					} else {
 						await interaction.reply('Votre question a été validée. Vous avez gagné 0.2 points !');
 					}
@@ -109,7 +110,7 @@ module.exports = {
 		}
 		if (interaction.options.getSubcommand() === 'refuse') {
 			const id = interaction.options.getString('id');
-			connection.query('UPDATE questions SET verified = ? AND ok = ? WHERE user_id = ?', [id, 0, interaction.user.id], async function (error, results, fields) {
+			connection.query('UPDATE questions SET verified = ? AND valid = ? WHERE user_id = ?', [id, 0, interaction.user.id], async function (error, results, fields) {
 				if (error) throw error;
 				console.log(results);
 				connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results, fields) {
@@ -117,6 +118,7 @@ module.exports = {
 					console.log(results);
 					if (results.length > 0) {
 						await interaction.client.channels.cache.get(results[0].value).send('<@' + interaction.user.id + '>, votre question n\'a pas été validée. Vous n\'avez donc pas gagné de point.  ');
+						await interaction.reply('La réponse a été envoyée dans le salon correspondant.')
 					} else {
 						await interaction.reply('Votre question n\'a pas été validée. Vous n\'avez donc pas gagné de point. ');
 					}

@@ -85,9 +85,9 @@ module.exports = {
 		}
 		if (interaction.options.getSubcommand() === 'validate') {
 			const id = interaction.options.getString('id');
-			connection.query('UPDATE images SET verified = ? AND ok = ? WHERE user_id = ?', [id, 1, interaction.user.id], async function (error, results, fields) {
+			connection.query('UPDATE images SET verified = ? AND ok = ? WHERE id = ?', [1, 1, id], async function (error, results, fields) {
 				if (error) throw error;
-				console.log(results);
+				console.log("acliade",results, id);
 				connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [interaction.user.id], async function (error, results, fields) {
 					if (error) throw error;
 					console.log(results);
@@ -109,7 +109,7 @@ module.exports = {
 		}
 		if (interaction.options.getSubcommand() === 'refuse') {
 			const id = interaction.options.getString('id');
-			connection.query('UPDATE images SET verified = ? AND ok = ? WHERE user_id = ?', [id, 0, interaction.user.id], async function (error, results, fields) {
+			connection.query('UPDATE images SET verified = ? AND ok = ? WHERE id = ?', [1, 0, id], async function (error, results, fields) {
 				if (error) throw error;
 				console.log(results);
 				connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results, fields) {

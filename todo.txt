@@ -1,17 +1,14 @@
-
 datechecker -> Envoyer un message si la date est enregistrée comme ayant une session
 
 ---- TOUT LE MONDE ----
 
-/help -> Récupérer les commandes disponibles
-/newquestion -> Proposer une question à la base de données
-
 ---- ADMIN ----
 
-/checkquestions (adm) -> Vérifier les questions de la base de données
-
 ---- OK ----
+/help -> Récupérer les commandes disponibles
 
+/newquestion -> Proposer une question à la base de données
+/checkquestions (adm) -> Vérifier les questions de la base de données
 /checkimages (adm) -> Vérifier les images de la base de données
 /unblock -> Débloquer un utilisateur
 /block -> Bloquer un utilisateur

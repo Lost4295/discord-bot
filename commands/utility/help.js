@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -6,51 +6,34 @@ module.exports = {
 		.setDescription('Liste toutes les commandes disponibles.'),
 	async execute(interaction) {
 		// interaction.guild is the object representing the Guild in which the command was run
-		await interaction.reply(`Commandes disponibles sur ${interaction.guild.name}:
-- **help** : Liste toutes les commandes disponibles. (cette commande !)
-
-- **server** : Liste des informations sur le serveur.
-
-- **user** : Liste des informations sur l'utilisateur.
-
-- **ping** : Pong !
-
-- **user** : Donne des informations sur l'utilisateur.
-
-- **server** : Donne des informations sur le serveur.
-
-- **invite** : Donne le lien pour inviter quelqu'un sur le serveur.
-
-- **register** : 
-
-- **connect** :
-
-- **getpts** : 
-
-- **leaderboard** :
-
-- **settings** : 
-
-- **dates** :
-
-- **nextevent** :
-
-- **newquestion** : Proposer une nouvelle question à ajouter à la base de données lors de la commande "connect".
-
-- **clear** : Supprime un nombre de messages spécifié. (réservé aux modérateurs)
-
-- **kick** : Expulse un utilisateur du serveur. (réservé aux modérateurs)
-
-- **ban** : Bannit un utilisateur du serveur. (réservé aux modérateurs)
-
-- **pingbdd** :
-
-- **timeout** :
-
-- **warn** :
-
-- **checkquestions** :
-
-            `);
+		let embed = new EmbedBuilder();
+		embed.setTitle(`Commandes disponibles sur ${interaction.guild.name} :`);
+		embed.setDescription('Voici la liste de toutes les commandes disponibles sur ce serveur.');
+		embed.setColor('#0099ff');
+		embed.setTimestamp();
+		embed.setFooter({ text: 'Bot créé par kai_you' });
+		let commands = interaction.client.commands;
+		let commandsList = '';
+		commands.forEach(command => {
+			commandsList += `- **/${command.data.name}** - ${command.data.description}`;
+			if (command.data.default_member_permissions) {
+				switch (command.data.default_member_permissions) {
+					case '8':
+						commandsList += " (👨‍✈️)";
+						break;
+					case '2':
+						commandsList += " (👩‍💻 +)";
+						break;
+					case '4':
+						commandsList += " (👩‍💻 ban)";
+						break;
+					case '1099511627776':
+						commandsList += " (👮‍♂️)";
+						break;
+				}
+			}
+			commandsList += "\n";
+		});
+		await interaction.reply({ content: commandsList, ephemeral: true });
 	},
 };
