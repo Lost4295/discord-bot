@@ -4,7 +4,7 @@ const { PASS, USER } = require('../../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('unblock')
-        .setDescription('Sélectionnez un membre et débloquez-le.')
+        .setDescription('Débloque un membre.')
         .addUserOption(option =>
             option
                 .setName('target')
@@ -34,5 +34,6 @@ module.exports = {
                 await interaction.reply(target.username + ' n\'est pas bloqué.');
             }
         });
+        
     },
 };

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChannelType } = require('discord.js');
+const { SlashCommandBuilder, ChannelType, PermissionFlagsBits } = require('discord.js');
 const { USER, PASS } = require('../../config.json');
 
 
@@ -10,7 +10,8 @@ module.exports = {
             option.setName('channel')
                 .setDescription('Le channel où les messages seront envoyés.')
                 .addChannelTypes(ChannelType.GuildText)
-                .setRequired(true)),
+                .setRequired(true))
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
         const channel = interaction.options.getChannel('channel');
         var mysql = require('mysql');
@@ -21,8 +22,13 @@ module.exports = {
             database: "bot"
         });
         connection.connect();
-		connection.query('INSERT INTO important (name, value) VALUES ("channel", "'+channel+'")', async function (error, resultats, fields) {
+        connection.query('DELETE FROM important WHERE name = "channel"', async function (error, resultats, fields) {
             if (error) throw error;
+            connection.query('INSERT INTO important (name, value) VALUES ("channel", "' + channel + '")', function (error, resultats, fields) {
+                if (error) throw error;
+            })
+            await interaction.reply(`Le channel ${channel} a été défini comme channel d'envoi par défaut du bot.`);
         })
-        await interaction.reply(`Le channel ${channel} a été défini comme channel d'envoi par défaut du bot.`);
-    }}
+        
+    }
+}

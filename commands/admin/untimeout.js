@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
     .setName('untimeout')
-    .setDescription('Sélectionnez un membre et enlevez lui son exclusion.')
+    .setDescription('Enlève l\'exclusion d\'un membre.')
     .addUserOption(option =>
         option
             .setName('cible')
@@ -12,8 +12,8 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .setDMPermission(false),
     async execute(interaction) {
-        const cible = interaction.options.getUser('cible');
-        await interaction.reply(`${cible.username} vient d'être gracié !`);
+        const cible = interaction.options.getMember('cible');
         await cible.timeout(null); 
+        await interaction.reply(`${cible.nickname?cible.nickname:cible.user.username} (${cible.user.username}) vient d'être gracié !`);
     },
 };

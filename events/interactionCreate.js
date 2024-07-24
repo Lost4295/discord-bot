@@ -6,13 +6,24 @@ module.exports = {
 	async execute(interaction) {
 		// var n = 0;
 		var mysql = require('mysql');
-		var connection = mysql.createConnection({
+		var connection;
+		connection = mysql.createConnection({
 			host: '127.0.0.1',
 			user: USER,
 			password: PASS,
 			database: 'bot'
 		});
-		connection.connect();
+		connection.connect(function (error) {
+			if (error) {
+				if (error.code == "PROTOCOL_CONNECTION_LOST") {
+					interaction.client.channels.cache.get(interaction.channel.id).send("La connexion à la base de données a été perdue. Veuillez contacter un administrateur.");
+				}
+				if (error.code == "ECONNREFUSED") {
+					interaction.client.channels.cache.get(interaction.channel.id).send("La connexion à la base de données a été refusée. Veuillez contacter un administrateur.");
+				}
+			}
+		});
+
 		// connection.query('SELECT user_id FROM blocked_users', async function (error, results, fields) {
 		// 	if (error) throw error;
 		// 	for (let i = 0; i < results.length; i++) {
@@ -29,8 +40,9 @@ module.exports = {
 		// }
 		connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results, fields) {
 			if (error) throw error;
-			if (results.length == 0){
-				await interaction.client.channels.cache.get(interaction.channel.id).send("Attention, vous n'avez **PAS** défini de salon où envoyer les messages. Lancez la commande **__/setup__**, ou demandez à un administrateur de le faire ! ")}
+			if (results.length == 0) {
+				await interaction.client.channels.cache.get(interaction.channel.id).send("Attention, vous n'avez **PAS** défini de salon où envoyer les messages. Lancez la commande **__/setup__**, ou demandez à un administrateur de le faire ! ")
+			}
 		})
 
 		if (interaction.isModalSubmit()) {
@@ -94,17 +106,17 @@ module.exports = {
 			try {
 				console.log(
 					`/${interaction.commandName} — Par ${interaction.user.username}`)
-					connection.query('SELECT user_id FROM blocked_users', async function (error, results, fields) {
-						if (error) throw error;
-						for (let i = 0; i < results.length; i++) {
-							console.log(results[i].user_id, interaction.user.id, results[i].user_id == interaction.user.id);
-							if (results[i].user_id == interaction.user.id) {
-								await interaction.reply({ content: 'Vous êtes bloqué.', ephemeral: true });
-								return;
-							}
+				connection.query('SELECT user_id FROM blocked_users', async function (error, results, fields) {
+					if (error) throw error;
+					for (let i = 0; i < results.length; i++) {
+						console.log(results[i].user_id, interaction.user.id, results[i].user_id == interaction.user.id);
+						if (results[i].user_id == interaction.user.id) {
+							await interaction.reply({ content: 'Vous êtes bloqué.', ephemeral: true });
+							return;
 						}
-						await command.execute(interaction);
-					});
+					}
+					await command.execute(interaction);
+				});
 			} catch (error) {
 				console.error(error);
 				if (interaction.replied || interaction.deferred) {

@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
     .setName('timeout')
-    .setDescription('Sélectionnez un membre et excluez-le.')
+    .setDescription('Exclut un membre.')
     .addUserOption(option =>
         option
             .setName('cible')
@@ -17,9 +17,9 @@ module.exports = {
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
         .setDMPermission(false),
     async execute(interaction) {
-        const cible = interaction.options.getUser('cible');
+        const cible = interaction.options.getMember('cible');
         const duree = interaction.options.getNumber('duree');
-        await interaction.reply(`Exclusion de ${cible.username} pendant ${duree} secondes.`);
+        await interaction.reply(`Exclusion de ${cible.nickname?cible.nickname:cible.user.username} (${cible.user.username}) pendant ${duree} secondes.`);
         await cible.timeout(duree*1000); 
     },
 };

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { PASS, USER } = require('../../config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,5 +22,6 @@ module.exports = {
 			console.log(results);
 			await interaction.reply('La base de données fonctionne correctement.');
 		});
+        
 	},
 };

@@ -52,5 +52,6 @@ module.exports = {
 				// await interaction.reply('Bonjour ' + results[0].nom + ' ' + results[0].prenom);
 			}
 		});
+        
 	},
 };

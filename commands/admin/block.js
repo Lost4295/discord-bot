@@ -4,7 +4,7 @@ const { PASS, USER } = require('../../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('block')
-        .setDescription('Sélectionnez un membre et bloquez-le.')
+        .setDescription('Bloque un membre.')
         .addUserOption(option =>
             option
                 .setName('target')
@@ -40,5 +40,6 @@ module.exports = {
                 await interaction.reply(target.username + ' est déjà bloqué.');
             }
         });
+        
     },
 };

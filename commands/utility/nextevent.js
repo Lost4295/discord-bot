@@ -26,5 +26,6 @@ module.exports = {
 				await interaction.reply(`Le prochain événement est prévu le __${resultats[0].date}__ : ${resultats[0].title}. Il est **${resultats[0].distanciel ? 'en distanciel' : 'en présentiel'}**.`);
 			}
 		});
+        
 	},
 };

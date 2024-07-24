@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 module.exports = {
     data: new SlashCommandBuilder()
     .setName('kick')
-    .setDescription('Sélectionnez un membre et expulsez-le.')
+    .setDescription('Expulse un membre.')
     .addUserOption(option =>
         option
             .setName('cible')

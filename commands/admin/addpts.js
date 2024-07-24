@@ -4,7 +4,7 @@ const { PASS, USER } = require('../../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('addpts')
-        .setDescription('Sélectionnez un membre et ajoutez lui des points.')
+        .setDescription('Ajoute des points à un membre.')
         .addUserOption(option =>
             option
                 .setName('target')
@@ -58,6 +58,7 @@ module.exports = {
                     })
                 };
             });
+            
         }
     }
 };

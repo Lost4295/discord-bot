@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const { PASS, USER } = require('../../config.json');
 const dayjs = require('dayjs')
 var objectSupport = require("dayjs/plugin/objectSupport");
@@ -6,7 +6,7 @@ dayjs.extend(objectSupport);
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('createdate')
-		.setDescription('Donne la liste des prochains événements.')
+		.setDescription('Crée un nouvel événement.')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 		.setDMPermission(false)
 		.addStringOption(option =>
@@ -81,11 +81,12 @@ module.exports = {
 		var date = dayjs({ year: year, month: month - 1, day: day, hour: 14, minute: 0, second:0, millisecond:0}).format('YYYY-MM-DD HH:mm:ss');
 		console.log(date);
 		connection.connect();
-		connection.query('INSERT INTO dates (title, description, date, distanciel) VALUES (?, ?, DATE(?), ?)', [title, description, date, distanciel],
+		connection.query('INSERT INTO dates (title, description, date, distanciel) VALUES (?, ?, TIMESTAMP(?), ?)', [title, description, date, distanciel],
 			async function (error, resultats, fields) {
 				if (error) throw error;
 				console.log(resultats);
 				await interaction.reply({ content: 'L\'événement a bien été ajouté.', ephemeral: true });
 			});
+		
 	},
 };

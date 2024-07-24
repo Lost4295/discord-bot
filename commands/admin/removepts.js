@@ -4,7 +4,7 @@ const { PASS, USER } = require('../../config.json');
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('removepts')
-        .setDescription('Sélectionnez un membre et retirez lui des points.')
+        .setDescription('Enlever des points à un membre.')
         .addUserOption(option =>
             option
                 .setName('target')
@@ -52,5 +52,6 @@ module.exports = {
                 })
             };
         });
+        
     }
 };

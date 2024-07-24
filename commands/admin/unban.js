@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits, ButtonBuilder, ButtonStyle, Ac
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('unban')
-        .setDescription('Sélectionnez un membre et débannissez-le.')
+        .setDescription('Débannit un membre.')
         .addUserOption(option =>
             option
                 .setName('target')

@@ -33,6 +33,7 @@ module.exports = {
             console.log(results);
             await interaction.reply('La question a bien été ajoutée.');
         });
+        
     }
 
 };

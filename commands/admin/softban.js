@@ -3,7 +3,7 @@ const { SlashCommandBuilder, PermissionFlagsBits, ButtonBuilder, ButtonStyle, Ac
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('softban')
-        .setDescription('Sélectionnez un membre et bannissez-le. Ce bannissement est retiré directement après.')
+        .setDescription('Softban un membre.')
         .addUserOption(option =>
             option
                 .setName('target')

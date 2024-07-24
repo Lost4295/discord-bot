@@ -36,6 +36,7 @@ module.exports = {
 			.setFooter({ text: 'Couch Bot' });
 		// .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
 		connection.connect();
+		var member = interaction.guild.members.cache.get(interaction.user.id);
 		connection.query('SELECT pseudo, points, visibility FROM users where user_id = ' + user.id, async function (error, results, fields) {
 			if (error) throw error;
 			console.log(results);
@@ -70,5 +71,6 @@ module.exports = {
 				});
 			}
 		});
+        
 	}
 };
