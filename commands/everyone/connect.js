@@ -93,7 +93,7 @@ module.exports = {
 									}
 									if (r == results[0].answer) {
 										await interaction.editReply({ content: 'Bonne réponse !' });
-										await interaction.followUp({ content: '<@'+target.id + '>, tu as gagné 0.5 points !' });
+										await interaction.followUp({ content: '<@' + target.id + '>, tu as gagné 0.5 points !' });
 										connection.query("UPDATE users SET points = points + 0.5 where user_id = " + target.id, async function (error, results, fields) {
 											if (error) throw error;
 										})
@@ -102,7 +102,7 @@ module.exports = {
 										})
 									} else {
 										await interaction.editReply({ content: 'Mauvaise réponse !' });
-										await interaction.followUp({ content: '<@'+target.id + '>, tu as gagné 0.2 points !' });
+										await interaction.followUp({ content: '<@' + target.id + '>, tu as gagné 0.2 points !' });
 										connection.query("UPDATE users SET points = points + 0.2 where user_id = " + target.id, async function (error, results, fields) {
 											if (error) throw error;
 										})
@@ -113,7 +113,7 @@ module.exports = {
 								} catch (e) {
 									console.error(e);
 									await interaction.editReply({ content: 'Confirmation non reçue dans l\'intervalle d\'1 minute, annulation', components: [] });
-									await interaction.followUp({ content: '<@'+target.id + '>, tu as gagné 0.1 points !' });
+									await interaction.followUp({ content: '<@' + target.id + '>, tu as gagné 0.1 points !' });
 									connection.query("UPDATE users SET points = points + 0.1 where user_id = " + target.id, async function (error, results, fields) {
 										if (error) throw error;
 									})

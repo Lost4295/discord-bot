@@ -88,12 +88,12 @@ module.exports = {
 		}
 		if (interaction.options.getSubcommand() === 'validate') {
 			const id = interaction.options.getString('id');
-			connection.query('SELECT * FROM images WHERE id =' + id, async function (error, results, fields) {
+			connection.query('SELECT * FROM images WHERE verified= 0 AND id =' + id, async function (error, results, fields) {
 				if (error) throw error;
 				if (results.length == 0) {
 					await interaction.reply('Cette image n\'existe pas.');
 				} else {
-					connection.query('UPDATE images SET verified = ? AND ok = ? WHERE id = ?', [1, 1, id], async function (error, results, fields) {
+					connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 1, id], async function (error, results) {
 						if (error) throw error;
 						console.log("acliade", results, id);
 						connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [interaction.user.id], async function (error, results, fields) {
@@ -104,11 +104,11 @@ module.exports = {
 							if (error) throw error;
 							console.log(results);
 						});
-						connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results, fields) {
+						connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa, fields) {
 							if (error) throw error;
-							console.log(results);
-							if (results.length > 0) {
-								await interaction.client.channels.cache.get(results[0].value).send('<@' + interaction.user.id + '>, votre image a été validée. Vous avez gagné 0.2 points !');
+							console.log(resultsa);
+							if (resultsa.length > 0) {
+								await interaction.client.channels.cache.get(resultsa[0].value).send('<@' + results[0].user_id + '>, votre image a été validée. Vous avez gagné 0.2 points !');
 							} else {
 								await interaction.reply('Votre image a été validée. Vous avez gagné 0.2 points !');
 							}
@@ -119,19 +119,19 @@ module.exports = {
 		}
 		if (interaction.options.getSubcommand() === 'refuse') {
 			const id = interaction.options.getString('id');
-			connection.query('SELECT * FROM images WHERE id =' + id, async function (error, results, fields) {
+			connection.query('SELECT * FROM images WHERE verified = 0 AND id =' + id, async function (error, results, fields) {
 				if (error) throw error;
 				if (results.length == 0) {
 					await interaction.reply('Cette image n\'existe pas.');
 				} else {
-					connection.query('UPDATE images SET verified = ? AND ok = ? WHERE id = ?', [1, 0, id], async function (error, results, fields) {
+					connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 0, id], async function (error, resultse, fields) {
 						if (error) throw error;
-						console.log(results);
-						connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results, fields) {
+						console.log(resultse);
+						connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa, fields) {
 							if (error) throw error;
-							console.log(results);
-							if (results.length > 0) {
-								await interaction.client.channels.cache.get(results[0].value).send('<@' + interaction.user.id + '>, votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point.  ');
+							console.log(resultsa);
+							if (resultsa.length > 0) {
+								await interaction.client.channels.cache.get(resultsa[0].value).send('<@' + results[0].user_id + '>, votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point.  ');
 							} else {
 								await interaction.reply('Votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point. ');
 							}

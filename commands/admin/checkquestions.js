@@ -87,13 +87,13 @@ module.exports = {
 		}
 		if (interaction.options.getSubcommand() === 'validate') {
 			const id = interaction.options.getString('id');
-			connection.query('SELECT * FROM questions WHERE id =' + id, async function (error, results, fields) {
+			connection.query('SELECT * FROM questions WHERE verified = 0 AND id =' + id, async function (error, results, fields) {
 				if (error) throw error;
 				console.log(results);
 				if (results.length == 0) {
 					await interaction.reply('Cette question potentielle n\'existe pas.');
 				} else {
-					connection.query('UPDATE questions SET verified = ? AND valid = ? WHERE user_id =? AND id = ?', [1, 1, results[0].user_id, id], async function (error, rezz, fields) {
+					connection.query('UPDATE questions SET verified = ?, valid = ? WHERE user_id = ? AND id = ?', [1, 1, results[0].user_id, id], async function (error, rezz, fields) {
 						if (error) throw error;
 						console.log(rezz);
 						connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [results[0].user_id], async function (error, re, fields) {
@@ -120,13 +120,13 @@ module.exports = {
 		}
 		if (interaction.options.getSubcommand() === 'refuse') {
 			const id = interaction.options.getString('id');
-			connection.query('SELECT * FROM questions WHERE id =' + id, async function (error, results, fields) {
+			connection.query('SELECT * FROM questions WHERE verified = 0 AND id =' + id, async function (error, results, fields) {
 				if (error) throw error;
 				console.log(results);
 				if (results.length == 0) {
 					await interaction.reply('Cette question potentielle n\'existe pas.');
 				} else {
-					connection.query('UPDATE questions SET verified = 1 AND valid = ? WHERE user_id = ? AND id = ?', [0, results[0].user_id, id], async function (error, era, fields) {
+					connection.query('UPDATE questions SET verified = ?, valid = ? WHERE user_id = ? AND id = ?', [true, 0, results[0].user_id, id], async function (error, era, fields) {
 						if (error) throw error;
 						console.log(era);
 						connection.query('SHOW WARNINGS', function (error, rs, fields) {
