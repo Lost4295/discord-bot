@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const { PASS, USER } = require('../../config.json');
 
 module.exports = {
@@ -24,25 +24,6 @@ module.exports = {
 								.setName('id')
 								.setDescription('ID de l\'image.')
 								.setRequired(true))))
-		.addSubcommand(group =>
-			group
-				.setName('validate')
-				.setDescription('Valider une image.')
-
-				.addStringOption(option =>
-					option
-						.setName('id')
-						.setDescription('ID de l\'image.')
-						.setRequired(true)))
-		.addSubcommand(group =>
-			group
-				.setName('refuse')
-				.setDescription('Refuser une image.')
-				.addStringOption(option =>
-					option
-						.setName('id')
-						.setDescription('ID de l\'image.')
-						.setRequired(true)))
 	,
 	async execute(interaction) {
 		var mysql = require('mysql');
@@ -75,71 +56,82 @@ module.exports = {
 					if (results.length == 0) {
 						await interaction.reply('Cette image n\'existe pas.');
 					} else {
+						const refuser = new ButtonBuilder()
+							.setCustomId('refuser')
+							.setLabel('Refuser')
+							.setStyle(ButtonStyle.Danger);
+						const accepter = new ButtonBuilder()
+							.setCustomId('accepter')
+							.setLabel('Accepter')
+							.setStyle(ButtonStyle.Success);
 						let em = new EmbedBuilder()
 							.setTitle('Image à vérifier')
 							.setDescription('Voici l\'image à vérifier.')
 							.setColor("Blurple")
 							.setImage(results[0].image);
 						em.addFields({ name: 'ID : ' + results[0].id, value: 'Image : ' + results[0].image });
-						await interaction.reply({ embeds: [em] });
+						const row = new ActionRowBuilder().addComponents(refuser, accepter);
+						const response = await interaction.reply({ embeds: [em], components: [row] });
+						const collectorFilter = i => i.user.id === interaction.user.id;
+						try {
+							const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+							if (confirmation.customId === 'accepter') {
+								connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 1, results[0].id], async function (error, resulta) {
+									if (error) throw error;
+									connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [interaction.user.id], async function (error, results, fields) {
+										if (error) throw error;
+										console.log(results);
+									});
+									connection.query('INSERT INTO points (user_id, points, reason) VALUES (?, ?, ?)', [interaction.user.id, 0.2, "Image acceptée"], async function (error, results, fields) {
+										if (error) throw error;
+										console.log(results);
+									});
+									await confirmation.update('L\'image a bien été validée.');
+									connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa, fields) {
+										if (error) throw error;
+										console.log(resultsa);
+										if (resultsa.length > 0) {
+											const channel = interaction.client.channels.cache.get(resultsa[0].value);
+											if (channel) {
+												await channel.send('<@' + results[0].user_id + '>, votre image a été validée. Vous avez gagné 0.2 points !');
+											} else {
+												await interaction.followUp('Votre image a été validée. Vous avez gagné 0.2 points !');
+											}
+										} else {
+											await interaction.reply('Votre image a été validée. Vous avez gagné 0.2 points !');
+										}
+									})
+								});
+							} else if (confirmation.customId === 'refuser') {
+								await confirmation.update({ content: 'Pas de point accordé', components: [] });
+								connection.query('SELECT * FROM images WHERE verified = 0 AND id =' + results[0].id, async function (error, results, fields) {
+									if (error) throw error;
+									if (results.length == 0) {
+										await interaction.reply('Cette image n\'existe pas.');
+									} else {
+										connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 0, id], async function (error, resultse, fields) {
+											if (error) throw error;
+											console.log(resultse);
+											connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa, fields) {
+												if (error) throw error;
+												console.log(resultsa);
+												if (resultsa.length > 0) {
+													await interaction.client.channels.cache.get(resultsa[0].value).send('<@' + results[0].user_id + '>, votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point.  ');
+												} else {
+													await interaction.reply('Votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point. ');
+												}
+											})
+										});
+									}
+								})
+							}
+						} catch (e) {
+							console.log(e);
+							await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+						}
 					}
 				});
 			}
 		}
-		if (interaction.options.getSubcommand() === 'validate') {
-			const id = interaction.options.getString('id');
-			connection.query('SELECT * FROM images WHERE verified= 0 AND id =' + id, async function (error, results, fields) {
-				if (error) throw error;
-				if (results.length == 0) {
-					await interaction.reply('Cette image n\'existe pas.');
-				} else {
-					connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 1, id], async function (error, results) {
-						if (error) throw error;
-						console.log("acliade", results, id);
-						connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [interaction.user.id], async function (error, results, fields) {
-							if (error) throw error;
-							console.log(results);
-						});
-						connection.query('INSERT INTO points (user_id, points, reason) VALUES (?, ?, ?)', [interaction.user.id, 0.2, "Image acceptée"], async function (error, results, fields) {
-							if (error) throw error;
-							console.log(results);
-						});
-						connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa, fields) {
-							if (error) throw error;
-							console.log(resultsa);
-							if (resultsa.length > 0) {
-								await interaction.client.channels.cache.get(resultsa[0].value).send('<@' + results[0].user_id + '>, votre image a été validée. Vous avez gagné 0.2 points !');
-							} else {
-								await interaction.reply('Votre image a été validée. Vous avez gagné 0.2 points !');
-							}
-						})
-					});
-				}
-			});
-		}
-		if (interaction.options.getSubcommand() === 'refuse') {
-			const id = interaction.options.getString('id');
-			connection.query('SELECT * FROM images WHERE verified = 0 AND id =' + id, async function (error, results, fields) {
-				if (error) throw error;
-				if (results.length == 0) {
-					await interaction.reply('Cette image n\'existe pas.');
-				} else {
-					connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 0, id], async function (error, resultse, fields) {
-						if (error) throw error;
-						console.log(resultse);
-						connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa, fields) {
-							if (error) throw error;
-							console.log(resultsa);
-							if (resultsa.length > 0) {
-								await interaction.client.channels.cache.get(resultsa[0].value).send('<@' + results[0].user_id + '>, votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point.  ');
-							} else {
-								await interaction.reply('Votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point. ');
-							}
-						})
-					});
-				}
-			})
-		}
-		
 	}
 };
