@@ -15,7 +15,7 @@ module.exports = {
     async execute(interaction) {
         const cible = interaction.options.getUser('cible');
         await interaction.reply(`Avertissement de <@${cible.id}> pour comportement inapproprié.`);
-        var mysql = require('mysql');
+        var mysql = require('mysql2');
         var connection = mysql.createConnection({
             host: '127.0.0.1',
             user: USER,

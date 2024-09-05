@@ -7,7 +7,7 @@ module.exports = {
 		.setDescription('Pour voir les points obtenus.')
 		.addUserOption(option => option.setName('user').setDescription('L\'utilisateur dont vous voulez voir les points.')),
 	async execute(interaction) {
-		var mysql = require('mysql');
+		var mysql = require('mysql2');
 		var connection = mysql.createConnection({
 			host: '127.0.0.1',
 			user: USER,

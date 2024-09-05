@@ -28,7 +28,7 @@ module.exports = {
 
         await interaction.reply(" Retrait de points ( " + pts + " ) à " + target.username);
 
-        var mysql = require('mysql');
+        var mysql = require('mysql2');
         var connection = mysql.createConnection({
             host: 'localhost',
             user: USER,

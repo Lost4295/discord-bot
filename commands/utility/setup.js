@@ -14,7 +14,7 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
         const channel = interaction.options.getChannel('channel');
-        var mysql = require('mysql');
+        var mysql = require('mysql2');
         var connection = mysql.createConnection({
             host: "localhost",
             user: USER,

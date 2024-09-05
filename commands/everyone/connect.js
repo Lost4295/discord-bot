@@ -12,7 +12,7 @@ module.exports = {
 				.setDescription('Une image qui certifie du jeu joué en distanciel.')),
 	async execute(interaction) {
 		const img = interaction.options.getAttachment('image');
-		var mysql = require('mysql');
+		var mysql = require('mysql2');
 		var connection = mysql.createConnection({
 			host: '127.0.0.1',
 			user: USER,

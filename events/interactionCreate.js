@@ -5,7 +5,7 @@ module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
 		// var n = 0;
-		var mysql = require('mysql');
+		var mysql = require('mysql2');
 		var connection;
 		connection = mysql.createConnection({
 			host: '127.0.0.1',
