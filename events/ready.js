@@ -25,7 +25,14 @@ module.exports = {
 				if (error) throw error;
 				if (results.length > 0) {
 					const channel = client.channels.cache.get('772516231952990208');
-					channel.send("L'association est ouverte aujourd'hui !");
+					let embed = new EmbedBuilder();
+					embed.setTitle('L\'association est ouverte ! ✅');
+					embed.setDescription('Pensez à utiliser la commande </connect:1281240146431447225> pour comptabiliser votre présence !');
+					embed.setColor("GREEN");
+					embed.setTimestamp();
+					embed.setImage('https://media4.giphy.com/media/xUOxeUl68CHOKg37nG/giphy.gif')
+					embed.setFooter({ text: 'Couch Bot' });
+					channel.send({ embeds: [embed] });
 					channel.permissionOverwrites.set([
 						{
 							id: '1029327286475968563',
@@ -33,13 +40,20 @@ module.exports = {
 						}]
 					);
 					setTimeout(() => {
+						let end = new EmbedBuilder();
+						end.setTitle('L\'association est terminée pour aujourd\'hui ! 👋');
+						end.setDescription('Le salon des présences ferme ses portes. Merci à tous pour votre participation !');
+						end.setColor("RED");
+						end.setTimestamp();
+						end.setImage('https://media3.giphy.com/media/JUSwkiO1Eh5K43ruN0/giphy.gif')
+						end.setFooter({ text: 'Couch Bot' });
+						channel.send({ embeds: [end] });
 						channel.permissionOverwrites.set([
 							{
 								id: '1029327286475968563',
 								deny: [PermissionsBitField.Flags.SendMessages],
 							}]
 						);
-						channel.send("L'association est PLUS ouverte aujourd'hui !");
 					}, 21600000);
 				}
 			});
