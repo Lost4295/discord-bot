@@ -20,10 +20,10 @@ module.exports = {
 			database: 'bot'
 		});
 		connection.connect();
-		connection.query("SELECT * FROM dates WHERE date > NOW() OR NOW() - date < 8*60*60*1000 ORDER BY date ASC LIMIT 1", async function (error, results, fields) {
+		connection.query("SELECT * FROM dates WHERE date > NOW() OR NOW() - date < 8*60*60*1000 AND distanciel = 1 ORDER BY date ASC LIMIT 1", async function (error, results, fields) {
 			if (error) throw error;
 			if (results.length == 0) {
-				await interaction.reply('Aucun événement n\'est prévu pour le moment.');
+				await interaction.reply('Aucun événement en distanciel n\'est prévu pour le moment.');
 			} else {
 				var now = new Date();
 				var date = new Date(results[0].date);

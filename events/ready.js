@@ -19,8 +19,8 @@ module.exports = {
 			// '00 30 10 * * *' = At 10:30:00am every day
 			// This runs every day at 10:30:00, you can do anything you want
 			// Specifing your guild (server) and your channel
-			const channel = client.channels.cache.get('1262692453358501919');
-			channel.send('You message');
+			// const channel = client.channels.cache.get('1262692453358501919');
+			// channel.send('You message');
 			connection.query('SELECT * from dates WHERE date = CURDATE()', async function (error, results, fields) {
 				if (error) throw error;
 				if (results.length > 0) {
