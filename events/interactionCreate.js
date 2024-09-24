@@ -23,21 +23,6 @@ module.exports = {
 				}
 			}
 		});
-
-		// connection.query('SELECT user_id FROM blocked_users', async function (error, results, fields) {
-		// 	if (error) throw error;
-		// 	for (let i = 0; i < results.length; i++) {
-		// 		console.log(results[i].user_id, interaction.user.id, results[i].user_id == interaction.user.id);
-		// 		if (results[i].user_id == interaction.user.id) {
-		// 			n = 1;
-		// 			break;
-		// 		}
-		// 	}
-		// });
-		// console.log(n);
-		// if (n == 1) {
-		// 	return;
-		// }
 		connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results, fields) {
 			if (error) throw error;
 			if (results.length == 0) {
@@ -52,7 +37,7 @@ module.exports = {
 				const classe = interaction.fields.getTextInputValue('classe')
 				console.log({ firstname, lastname, classe });
 				connection.query(
-					'INSERT INTO users (pseudo, user_id, prenom, nom, classe) VALUES (?, ?, ?, ?, ?)',
+					'INSERT INTO users (pseudo, user_id, prenom, nom, classe, date_insc) VALUES (?, ?, ?, ?, ?, NOW())',
 					[interaction.user.username, interaction.user.id, firstname, lastname, classe],
 					async function (error, results, fields) {
 						if (error) {

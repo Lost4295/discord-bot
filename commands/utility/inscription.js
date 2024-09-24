@@ -36,7 +36,7 @@ module.exports = {
             // .setStyle(TextInputStyle.Paragraph);
             .setStyle(TextInputStyle.Short)
             .setMinLength(2)
-            .setMaxLength(5)
+            .setMaxLength(7)
             .setPlaceholder(`
 Exemple : 4MOC, 2A, 1I, etc.
 `);
