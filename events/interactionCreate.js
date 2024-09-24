@@ -41,6 +41,7 @@ module.exports = {
 					[interaction.user.username, interaction.user.id, firstname, lastname, classe],
 					async function (error, results, fields) {
 						if (error) {
+							console.log(error);
 							if (error.code === 'ER_DUP_ENTRY') {
 								await interaction.reply({ content: 'Vous êtes déjà inscrit. Si vous voulez modifier vos informations, veuillez exécuter la commande /settings.', ephemeral: true });
 							} else {

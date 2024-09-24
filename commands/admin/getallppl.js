@@ -20,8 +20,8 @@ module.exports = {
             if (error) throw error;
             console.log(results);
             let str = "Membres inscrits dans la base de données de Couch Bot : \n";
-            for (let i = 0; i < results.length; i++) {
-                str += "- " + results[i].user_id + " : " + results[i].username + "\n";
+            for (let membre of results) {
+                str +=` -  ${membre.pseudo} : ${membre.prenom} ${membre.nom} \n`;
             }
             await interaction.reply(str);
         }
