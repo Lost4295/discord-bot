@@ -31,7 +31,7 @@ module.exports = {
                 connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, 0.5, "Présence à l'association en présentiel"], async function (error, results, fields) {
                     if (error) throw error;
                 })
-                connection.query('UPDATE users SET points = points + ' + pts + ' where user_id = ' + target.id, async function (error, results, fields) {
+                connection.query('UPDATE users SET points = points + ' + 0.5 + ' where user_id = ' + target.id, async function (error, results, fields) {
                     if (error) throw error;
                     console.log(results);
                     await interaction.followUp(`<@${target.id}> a bien été enregistré comme présent à l'association !`);
