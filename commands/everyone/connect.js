@@ -20,7 +20,7 @@ module.exports = {
 			database: 'bot'
 		});
 		connection.connect();
-		connection.query("SELECT * FROM dates WHERE date BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 8 HOUR) AND distanciel = 1 ORDER BY date ASC LIMIT 1; ", async function (error, results, fields) {
+		connection.query("SELECT * FROM dates WHERE NOW() BETWEEN date AND DATE_ADD(date, INTERVAL 8 HOUR) AND distanciel = 1 ORDER BY date ASC LIMIT 1; ", async function (error, results, fields) {
 			if (error) throw error;
 			if (results.length == 0) {
 				await interaction.reply('Aucun événement en distanciel n\'est prévu pour le moment.');
