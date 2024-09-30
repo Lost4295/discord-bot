@@ -21,7 +21,7 @@ module.exports = {
 			// Specifing your guild (server) and your channel
 			// const channel = client.channels.cache.get('1262692453358501919');
 			// channel.send('You message');
-			connection.query('SELECT * from dates WHERE date = CURDATE()', async function (error, results, fields) {
+			connection.query('SELECT * from dates WHERE NOW() BETWEEN date AND DATE_ADD(date, INTERVAL 5 MINUTE)', async function (error, results, fields) {
 				if (error) throw error;
 				if (results.length > 0) {
 					const channel = client.channels.cache.get('772516231952990208');
