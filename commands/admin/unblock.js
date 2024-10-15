@@ -14,26 +14,27 @@ module.exports = {
         .setDMPermission(false),
     async execute(interaction) {
         const target = interaction.options.getUser('target');
-        var mysql = require('mysql2');
-        var connection = mysql.createConnection({
-            host: '127.0.0.1',
-            user: USER,
-            password: PASS,
-            database: 'bot'
-        });
-        connection.connect();
-        connection.query('SELECT * from blocked_users WHERE user_id = ' + target.id, async function (error, results, fields) {
-            if (error) throw error;
-            console.log(results);
-            if (results.length == 1) {
-                connection.query('DELETE FROM blocked_users WHERE user_id = ?', [target.id], async function (error, results, fields) {
-                    if (error) throw error;
-                    await interaction.reply(target.username + ' a été débloqué avec succès.');
-                });
-            } else {
-                await interaction.reply(target.username + ' n\'est pas bloqué.');
+        const pool = require("../../db.js");
+        pool.getConnection(function (err, connection) {
+            if (err) {
+                console.log(err);
+                interaction.reply('La base de données ne fonctionne pas.');
+                pool.releaseConnection(connection);
+                return;
             }
+            connection.query('SELECT * from blocked_users WHERE user_id = ' + target.id, async function (error, results, fields) {
+                if (error) throw error;
+                console.log(results);
+                if (results.length == 1) {
+                    connection.query('DELETE FROM blocked_users WHERE user_id = ?', [target.id], async function (error, results, fields) {
+                        if (error) throw error;
+                        await interaction.reply(target.username + ' a été débloqué avec succès.');
+                    });
+                } else {
+                    await interaction.reply(target.username + ' n\'est pas bloqué.');
+                }
+            });
+            pool.releaseConnection(connection);
         });
-        
     },
 };

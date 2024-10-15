@@ -9,19 +9,20 @@ module.exports = {
 		.setDMPermission(false),
 	async execute(interaction) {
 
-		var mysql = require('mysql2');
-		var connection = mysql.createConnection({
-			host: '127.0.0.1',
-			user: USER,
-			password: PASS,
-			database: 'bot'
-		});
-		connection.connect();
+		const pool = require("../../db.js");
+		pool.getConnection(function (err, connection) {
+			if (err) {
+				console.log(err);
+				interaction.reply('La base de données ne fonctionne pas.');
+				pool.releaseConnection(connection);
+				return;
+			}
 		connection.query('SELECT 1 as ok', async function (error, results, fields) {
 			if (error) throw error;
 			console.log(results);
 			await interaction.reply('La base de données fonctionne correctement.');
 		});
-        
+        pool.releaseConnection(connection);
+	});
 	},
 };

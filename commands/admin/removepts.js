@@ -28,30 +28,25 @@ module.exports = {
 
         await interaction.reply(" Retrait de points ( " + pts + " ) à " + target.username);
 
-        var mysql = require('mysql2');
-        var connection = mysql.createConnection({
-            host: 'localhost',
-            user: USER,
-            password: PASS,
-            database: 'bot'
+        const pool = require("../../db.js");
+        pool.getConnection(function (err, connection) {
+            connection.query('SELECT * FROM users where user_id = ' + target.id, async function (error, results, fields) {
+                if (error) throw error;
+                console.log(results);
+                if (results[0] == null) {
+                    await interaction.followUp(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
+                } else {
+                    connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, -pts, reason], async function (error, results, fields) {
+                        if (error) throw error;
+                    })
+                    connection.query('UPDATE users SET points = points - ' + pts + ' where user_id = ' + target.id, async function (error, results, fields) {
+                        if (error) throw error;
+                        console.log(results);
+                        await interaction.followUp('Points retirés avec succès');
+                    })
+                };
+            });
+            pool.releaseConnection(connection);
         });
-        connection.connect();
-        connection.query('SELECT * FROM users where user_id = ' + target.id, async function (error, results, fields) {
-            if (error) throw error;
-            console.log(results);
-            if (results[0] == null) {
-                await interaction.followUp(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
-            } else {
-                connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, -pts, reason], async function (error, results, fields) {
-                    if (error) throw error;
-                })
-                connection.query('UPDATE users SET points = points - ' + pts + ' where user_id = ' + target.id, async function (error, results, fields) {
-                    if (error) throw error;
-                    console.log(results);
-                    await interaction.followUp('Points retirés avec succès');
-                })
-            };
-        });
-        
     }
 };

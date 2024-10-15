@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
 const dayjs = require('dayjs')
-var objectSupport = require("dayjs/plugin/objectSupport");
+const objectSupport = require("dayjs/plugin/objectSupport");
 dayjs.extend(objectSupport);
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -71,22 +70,24 @@ module.exports = {
 		const day = interaction.options.getInteger('day');
 		const distanciel = interaction.options.getBoolean('distanciel');
 
-		var mysql = require('mysql2');
-		var connection = mysql.createConnection({
-			host: '127.0.0.1',
-			user: USER,
-			password: PASS,
-			database: 'bot'
-		});
-		var date = dayjs({ year: year, month: month - 1, day: day, hour: 14, minute: 0, second:0, millisecond:0}).format('YYYY-MM-DD HH:mm:ss');
+		const pool = require("../../db.js");
+		pool.getConnection(function (err, connection) {
+			if (err) {
+				console.log(err);
+				interaction.reply('La base de données ne fonctionne pas.');
+				pool.releaseConnection(connection);
+				return;
+			}
+		const date = dayjs({ year: year, month: month - 1, day: day, hour: 14, minute: 0, second:0, millisecond:0}).format('YYYY-MM-DD HH:mm:ss');
 		console.log(date);
-		connection.connect();
+		
 		connection.query('INSERT INTO dates (title, description, date, distanciel) VALUES (?, ?, TIMESTAMP(?), ?)', [title, description, date, distanciel],
 			async function (error, resultats, fields) {
 				if (error) throw error;
 				console.log(resultats);
 				await interaction.reply({ content: 'L\'événement a bien été ajouté.', ephemeral: true });
 			});
-		
+			pool.releaseConnection(connection);
+		});
 	},
 };

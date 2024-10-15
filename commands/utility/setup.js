@@ -14,21 +14,22 @@ module.exports = {
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
     async execute(interaction) {
         const channel = interaction.options.getChannel('channel');
-        var mysql = require('mysql2');
-        var connection = mysql.createConnection({
-            host: "localhost",
-            user: USER,
-            password: PASS,
-            database: "bot"
-        });
-        connection.connect();
-        connection.query('DELETE FROM important WHERE name = "channel"', async function (error, resultats, fields) {
-            if (error) throw error;
-            connection.query('INSERT INTO important (name, value) VALUES ("channel", "' + channel + '")', function (error, resultats, fields) {
+        const pool = require("../../db.js");
+        pool.getConnection(function (err, connection) {
+            if (err) {
+                console.log(err);
+                interaction.reply('La base de données ne fonctionne pas.');
+                pool.releaseConnection(connection);
+                return;
+            }
+            connection.query('DELETE FROM important WHERE name = "channel"', async function (error, resultats, fields) {
                 if (error) throw error;
+                connection.query('INSERT INTO important (name, value) VALUES ("channel", "' + channel + '")', function (error, resultats, fields) {
+                    if (error) throw error;
+                })
+                await interaction.reply(`Le channel ${channel} a été défini comme channel d'envoi par défaut du bot.`);
             })
-            await interaction.reply(`Le channel ${channel} a été défini comme channel d'envoi par défaut du bot.`);
-        })
-        
+            pool.releaseConnection(connection);
+        });
     }
 }

@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
+const { SlashCommandBuilder } = require('discord.js');
+
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,24 +8,25 @@ module.exports = {
 		.setDMPermission(false),
 	async execute(interaction) {
 
-		var mysql = require('mysql2');
-		var connection = mysql.createConnection({
-			host: '127.0.0.1',
-			user: USER,
-			password: PASS,
-			database: 'bot'
-		});
-		connection.connect();
-		connection.query('SELECT * from dates WHERE date > NOW()ORDER BY date ASC LIMIT 1', async function (error, resultats, fields) {
-			if (error) throw error;
-			console.log(resultats);
-			if (resultats.length == 0) {
-				await interaction.reply('Aucun événement n\'est prévu pour le moment.');
+		const pool = require("../../db.js");
+		pool.getConnection(function (err, connection) {
+			if (err) {
+				console.log(err);
+				interaction.reply('La base de données ne fonctionne pas.');
+				pool.releaseConnection(connection);
+				return;
 			}
-			else {
-				await interaction.reply(`Le prochain événement est prévu le __${resultats[0].date}__ : ${resultats[0].title}. Il est **${resultats[0].distanciel ? 'en distanciel' : 'en présentiel'}**.`);
-			}
+			connection.query('SELECT * from dates WHERE date > NOW()ORDER BY date ASC LIMIT 1', async function (error, resultats, fields) {
+				if (error) throw error;
+				console.log(resultats);
+				if (resultats.length == 0) {
+					await interaction.reply('Aucun événement n\'est prévu pour le moment.');
+				}
+				else {
+					await interaction.reply(`Le prochain événement est prévu le __${resultats[0].date}__ : ${resultats[0].title}. Il est **${resultats[0].distanciel ? 'en distanciel' : 'en présentiel'}**.`);
+				}
+			});
+			pool.releaseConnection(connection);
 		});
-        
 	},
 };
