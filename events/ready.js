@@ -1,6 +1,5 @@
 const { Events, PermissionsBitField, EmbedBuilder } = require('discord.js');
 const cron = require('cron');
-const { PASS, USER } = require('../config.json');
 
 module.exports = {
 	name: Events.ClientReady,
@@ -8,28 +7,31 @@ module.exports = {
 	execute(client) {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 		const pool = require("../db.js");
-		pool.getConnection(function (err, connection) {
-			let scheduledMessage = new cron.CronJob('00 00 14 * * *', () => {
+		let scheduledMessage = new cron.CronJob('00 00 14 * * *', () => {
+				pool.getConnection(function (err, connection) {
 				// '00 30 10 * * *' = At 10:30:00am every day
 				// This runs every day at 10:30:00, you can do anything you want
 				// Specifing your guild (server) and your channel
 				// const channel = client.channels.cache.get('1262692453358501919');
 				// channel.send('You message');
-				connection.query('SELECT * from dates WHERE NOW() BETWEEN date AND DATE_SUB(DATE_SUB(date, INTERVAL 5 MINUTE), INTERVAL 2 DAY)', async function (error, results, fields) {
+				connection.query('SELECT * from dates WHERE NOW() BETWEEN DATE_SUB(DATE_SUB(date, INTERVAL 5 MINUTE), INTERVAL 1 DAY) and date', async function (error, results) {
 					if (error) throw error;
-					if (results.length > 0) {
-						const channel = client.channels.cache.get('510741954083160066');
-						await channel.send("Une séance se prépare ! Elle sera "+( results[0].distanciel?"en distanciel":"en présentiel")+ "! Allez, à dans deux jours ! @here")
-					}
-				});
-				connection.query('SELECT * from dates WHERE NOW() BETWEEN date AND DATE_SUB(DATE_SUB(date, INTERVAL 5 MINUTE), INTERVAL 1 DAY)', async function (error, results, fields) {
-					if (error) throw error;
+					console.log(results);
 					if (results.length > 0) {
 						const channel = client.channels.cache.get('510741954083160066');
 						await channel.send("Une séance se prépare ! Elle sera "+( results[0].distanciel?"en distanciel":"en présentiel")+ "! Allez, à demain ! @here")
+					} else {
+						connection.query('SELECT * from dates WHERE NOW() BETWEEN DATE_SUB(DATE_SUB(date, INTERVAL 5 MINUTE), INTERVAL 2 DAY) and date', async function (error, results) {
+							if (error) throw error;
+							console.log(results);
+							if (results.length > 0) {
+								const channel = client.channels.cache.get('510741954083160066');
+								await channel.send("Une séance se prépare ! Elle sera "+( results[0].distanciel?"en distanciel":"en présentiel")+ "! Allez, à dans deux jours ! @here")
+							}
+						});
 					}
 				});
-				connection.query('SELECT * from dates WHERE NOW() BETWEEN date AND DATE_ADD(date, INTERVAL 5 MINUTE)', async function (error, results, fields) {
+				connection.query('SELECT * from dates WHERE NOW() BETWEEN date AND DATE_ADD(date, INTERVAL 5 MINUTE)', async function (error, results) {
 					if (error) throw error;
 					if (results.length > 0) {
 						const channel = client.channels.cache.get('772516231952990208');
@@ -44,8 +46,13 @@ module.exports = {
 						channel.permissionOverwrites.set([
 							{
 								id: '1029327286475968563',
-								allow: [PermissionsBitField.Flags.SendMessages],
-							}]
+								allow: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel],
+							},
+							{
+								id:"510739348069679115",
+								deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel],
+							}
+						]
 						);
 						setTimeout(() => {
 							let end = new EmbedBuilder();
@@ -60,15 +67,21 @@ module.exports = {
 								{
 									id: '1029327286475968563',
 									deny: [PermissionsBitField.Flags.SendMessages],
-								}]
+									allow: [PermissionsBitField.Flags.ViewChannel],
+								},
+							{
+								id:"510739348069679115",
+								deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel],
+							}
+							]
 							);
 						}, 21600000);
 					}
 				});
+				pool.releaseConnection(connection);
 			});
+		});
 			// When you want to start it, use:
 			scheduledMessage.start();
-			pool.releaseConnection(connection);
-		});
 	},
 };

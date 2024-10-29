@@ -4,7 +4,7 @@ module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
 		// var n = 0;
-		if (interaction.channel.id === '1283837518848196721' || interaction.member.roles.cache.some(role => role.name === 'Admin')) {
+		if (interaction.channel.id === '1283837518848196721' || interaction.channel.id === "772516231952990208" || interaction.member.roles.cache.some(role => role.name === 'Admin')) {
 			const pool = require("../db.js");
 			pool.getConnection(async function (error, connection) {
 				if (error) {
@@ -15,7 +15,11 @@ module.exports = {
 						interaction.client.channels.cache.get(interaction.channel.id).send("La connexion à la base de données a été refusée. Veuillez contacter un administrateur.");
 					}
 				}
-				connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results, fields) {
+				if (interaction.channel.id ==='772516231952990208' && interaction.commandName !== 'connect' && !interaction.member.roles.cache.some(role => role.name === 'Admin')) {
+					await interaction.reply({ content: 'Vous n\'avez pas la permission d\'utiliser cette commande ici.', ephemeral: true });
+					return;
+				}
+				connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results) {
 					if (error) throw error;
 					if (results.length == 0) {
 						await interaction.client.channels.cache.get(interaction.channel.id).send("Attention, vous n'avez **PAS** défini de salon où envoyer les messages. Lancez la commande **__/setup__**, ou demandez à un administrateur de le faire ! ")
@@ -28,9 +32,9 @@ module.exports = {
 						const classe = interaction.fields.getTextInputValue('classe')
 						console.log({ firstname, lastname, classe });
 						connection.query(
-							'INSERT INTO users (pseudo, user_id, prenom, nom, classe, date_insc) VALUES (?, ?, ?, ?, ?, NOW())',
+							'INSERT INTO users (pseudo, user_id, prenom, nom, classe, date_inscr) VALUES (?, ?, ?, ?, ?, NOW())',
 							[interaction.user.username, interaction.user.id, firstname, lastname, classe],
-							async function (error, results, fields) {
+							async function (error) {
 								if (error) {
 									console.log(error);
 									if (error.code === 'ER_DUP_ENTRY') {
@@ -53,9 +57,9 @@ module.exports = {
 						// await interaction.followUp({ content: 'Your d was received successfully!' });;
 						// const a = interaction.fields.getTextInputValue('answerInput');
 						// console.log({ favoriteColor });
-					} else if (interaction.customId === undefined) {
-						console.log("catch undefined");
 					}
+				} else if (interaction.isButton()) {
+					console.log("test");
 				} else {
 					const { cooldowns } = interaction.client;
 					const command = interaction.client.commands.get(interaction.commandName);
@@ -85,15 +89,17 @@ module.exports = {
 					try {
 						console.log(
 							`/${interaction.commandName} — Par ${interaction.user.username}`)
-						connection.query('SELECT user_id FROM blocked_users', async function (error, results, fields) {
+						connection.query('SELECT user_id FROM blocked_users', async function (error, results) {
 							if (error) throw error;
-							for (let i = 0; i < results.length; i++) {
-								console.log(results[i].user_id, interaction.user.id, results[i].user_id == interaction.user.id);
-								if (results[i].user_id == interaction.user.id) {
+							for (let result of results) {
+								console.log(result.user_id, interaction.user.id, result.user_id == interaction.user.id);
+								if (result.user_id == interaction.user.id) {
 									await interaction.reply({ content: 'Vous êtes bloqué.', ephemeral: true });
 									return;
 								}
 							}
+							console.log(interaction);
+
 							pool.releaseConnection(connection);
 							await command.execute(interaction);
 						});
@@ -108,6 +114,8 @@ module.exports = {
 					}
 				}
 			});
+		} else {
+			await interaction.reply({ content: 'Vous ne pouvez pas utiliser cette commande dans ce salon.', ephemeral: true });
 		}
 	}
 }

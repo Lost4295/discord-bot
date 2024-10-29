@@ -65,15 +65,16 @@ module.exports = {
 		const id = interaction.options.getInteger('id');
 		
 		const pool = require("../../db.js");
-		pool.getConnection(function (err, connection) {
+		pool.getConnection(async function (err, connection) {
 			if (err) {
 				console.log(err);
 				interaction.reply('La base de données ne fonctionne pas.');
 				pool.releaseConnection(connection);
 				return;
 			}
+			await interaction.deferReply();
 			connection.query('SELECT * FROM dates WHERE id = ' + id,
-				async function (error, resultats, fields) {
+				async function (error, resultats) {
 					if (error) throw error;
 					console.log(resultats);
 					if (resultats.length == 0) {
@@ -91,7 +92,7 @@ module.exports = {
 					const date = dayjs({ year: year, month: month - 1, day: day, hour: 14, minute: 0, second: 0, millisecond: 0 }).format('YYYY-MM-DD HH:mm:ss');
 					console.log(date);
 					connection.query('INSERT INTO dates (title, description, date, distanciel) VALUES (?, ?, TIMESTAMP(?), ?)', [title, description, date, distanciel],
-						async function (error, resultats, fields) {
+						async function (error, resultats) {
 							if (error) throw error;
 							console.log(resultats);
 							await interaction.reply({ content: 'L\'événement a bien été modifié.', ephemeral: true });

@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,18 +14,19 @@ module.exports = {
     async execute(interaction) {
         const target = interaction.options.getUser('target');
         const pool = require("../../db.js");
-        pool.getConnection(function (err, connection) {
+        pool.getConnection(async function (err, connection) {
             if (err) {
                 console.log(err);
                 interaction.reply('La base de données ne fonctionne pas.');
                 pool.releaseConnection(connection);
                 return;
             }
-            connection.query('SELECT * from blocked_users WHERE user_id = ' + target.id, async function (error, results, fields) {
+            await interaction.deferReply();
+            connection.query('SELECT * from blocked_users WHERE user_id = ' + target.id, async function (error, results) {
                 if (error) throw error;
                 console.log(results);
                 if (results.length == 1) {
-                    connection.query('DELETE FROM blocked_users WHERE user_id = ?', [target.id], async function (error, results, fields) {
+                    connection.query('DELETE FROM blocked_users WHERE user_id = ?', [target.id], async function (error) {
                         if (error) throw error;
                         await interaction.reply(target.username + ' a été débloqué avec succès.');
                     });

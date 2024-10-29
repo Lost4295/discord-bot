@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -7,11 +6,11 @@ module.exports = {
 		.setDescription('Donne la liste des prochains événements.')
 		.setDMPermission(false),
 	async execute(interaction) {
-
 		const pool = require("../../db.js");
-		pool.getConnection(function (err, connection) {
-			connection.query('SELECT * from dates WHERE date > NOW()', async function (error, resultats, fields) {
-				if (error) throw error;
+		pool.getConnection(async function (err, connection) {
+			await interaction.deferReply();
+			connection.query('SELECT * from dates WHERE date > NOW()', async function (error, resultats) {
+				if (error) throw error
 				console.log(resultats);
 				let embed = new EmbedBuilder()
 					.setTitle('Dates')
@@ -28,7 +27,7 @@ module.exports = {
 						);
 					}
 				}
-				await interaction.reply({ embeds: [embed] });
+				await interaction.editReply({ embeds: [embed] });
 			});
 			pool.releaseConnection(connection);
 		});

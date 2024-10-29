@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,19 +15,20 @@ module.exports = {
         const cible = interaction.options.getUser('cible');
         await interaction.reply(`Avertissement de <@${cible.id}> pour comportement inapproprié.`);
         const pool = require("../../db.js");
-        pool.getConnection(function (err, connection) {
+        pool.getConnection(async function (err, connection) {
             if (err) {
                 console.log(err);
                 interaction.reply('La base de données ne fonctionne pas.');
                 pool.releaseConnection(connection);
                 return;
             }
-            connection.query('UPDATE USERS SET warns = warns + 1 WHERE user_id = ?', [cible.id, cible.id], async function (error, results, fields) {
+            await interaction.deferReply();
+            connection.query('UPDATE USERS SET warns = warns + 1 WHERE user_id = ?', [cible.id, cible.id], async function (error) {
                 if (error) throw error;
                 connection.query(
                     'SELECT warns FROM users where user_id = ?',
                     [cible.id],
-                    async function (error, results, fields) {
+                    async function (error, results) {
                         if (error) throw error;
                         console.log(results);
                         if (results[0].warns >= 3) {

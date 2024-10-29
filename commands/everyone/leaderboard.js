@@ -1,5 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,8 +8,9 @@ module.exports = {
 	async execute(interaction) {
 
 		const pool = require("../../db.js");
-		pool.getConnection(function (err, connection) {
-			connection.query('SELECT * from users WHERE points > 0 AND visibility=1 ORDER BY points DESC', async function (error, resultats, fields) {
+		pool.getConnection(async function (err, connection) {
+			await interaction.deferReply();
+			connection.query('SELECT * from users WHERE points > 0 AND visibility=1 ORDER BY points DESC', async function (error, resultats) {
 				if (error) throw error;
 				console.log(resultats);
 				let embed = new EmbedBuilder()
@@ -27,9 +27,9 @@ module.exports = {
 				embed.addFields(
 					{ name: '\u200B', value: '\u200B' },
 				);
-				connection.query('SELECT * from users WHERE user_id = ' + interaction.user.id, async function (error, results, fields) {
+				connection.query('SELECT * from users WHERE user_id = ' + interaction.user.id, async function (error, results) {
 					if (error) throw error;
-					connection.query('SELECT * from users WHERE points > 0 ORDER BY points DESC', async function (error, aa, fields) {
+					connection.query('SELECT * from users WHERE points > 0 ORDER BY points DESC', async function (error, aa) {
 						if (error) throw error;
 						let position = 0;
 						for (let i = 0; i < aa.length; i++) {
@@ -43,7 +43,7 @@ module.exports = {
 						} else {
 							embed.addFields({ name: `Votre position`, value: position + "", inline: true }, { name: `Vos points`, value: results[0].points + "", inline: true })
 						}
-						await interaction.reply({ embeds: [embed] });
+						await interaction.editReply({ embeds: [embed] });
 					});
 				});
 			});

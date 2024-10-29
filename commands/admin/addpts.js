@@ -35,21 +35,21 @@ module.exports = {
 
             const pool = require("../../db.js");
             pool.getConnection(function (err, connection) {
-                connection.query('SELECT * FROM users where user_id = ' + target.id, async function (error, results, fields) {
+                connection.query('SELECT * FROM users where user_id = ' + target.id, async function (error, results) {
                     if (error) throw error;
                     console.log(results);
                     if (results[0] == null) {
                         await interaction.followUp(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
-                    } else {
-                        connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, pts, reason], async function (error, results, fields) {
-                            if (error) throw error;
-                        })
-                        connection.query('UPDATE users SET points = points + ' + pts + ' where user_id = ' + target.id, async function (error, results, fields) {
-                            if (error) throw error;
-                            console.log(results);
-                            await interaction.followUp('Points ajoutés avec succès');
-                        })
-                    };
+                        return;
+                    }
+                    connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, pts, reason], async function (error) {
+                        if (error) throw error;
+                    })
+                    connection.query('UPDATE users SET points = points + ' + pts + ' where user_id = ' + target.id, async function (error, results) {
+                        if (error) throw error;
+                        console.log(results);
+                        await interaction.followUp('Points ajoutés avec succès');
+                    })
                 });
                 pool.releaseConnection(connection);
             });

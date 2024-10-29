@@ -1,6 +1,4 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { USER, PASS } = require('../../config.json');
-
 
 module.exports = {
     data: new SlashCommandBuilder()

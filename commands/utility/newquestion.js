@@ -1,5 +1,4 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
 
 
 module.exports = {
@@ -21,8 +20,9 @@ module.exports = {
         const question = interaction.options.getString('question');
         const answer = interaction.options.getBoolean('réponse');
         const pool = require("../../db.js");
-        pool.getConnection(function (err, connection) {
-            connection.query('INSERT INTO questions (question, answer, valid, user_id) VALUES (?, ?, ?, ?)', [question, answer, 0, interaction.user.id], async function (error, results, fields) {
+        pool.getConnection(async function (err, connection) {
+            await interaction.deferReply();
+            connection.query('INSERT INTO questions (question, answer, valid, user_id) VALUES (?, ?, ?, ?)', [question, answer, 0, interaction.user.id], async function (error, results) {
                 if (error) throw error;
                 console.log(results);
                 await interaction.reply('La question a bien été ajoutée.');

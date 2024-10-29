@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,7 +7,7 @@ module.exports = {
 		.addUserOption(option => option.setName('user').setDescription('L\'utilisateur dont vous voulez voir les points.')),
 	async execute(interaction) {
 		const pool = require("../../db.js");
-		pool.getConnection(function (err, connection) {
+		pool.getConnection(async function (err, connection) {
 			const user = interaction.options.getUser('user') ?? interaction.user;
 			let exampleEmbed = new EmbedBuilder()
 				.setColor(0x0099FF)
@@ -17,17 +16,18 @@ module.exports = {
 				.setFooter({ text: 'Couch Bot' });
 
 			const member = interaction.guild.members.cache.get(interaction.user.id);
-			connection.query('SELECT pseudo, points, visibility FROM users where user_id = ' + user.id, async function (error, results, fields) {
+			await interaction.deferReply();
+			connection.query('SELECT pseudo, points, visibility FROM users where user_id = ' + user.id, async function (error, results) {
 				if (error) throw error;
 				console.log(results);
 				if (results.length == 0) {
-					await interaction.reply(user.username + ' n\'est inscrit dans la base de données de Couch Bot. ');
+					await interaction.editReply(user.username + ' n\'est inscrit dans la base de données de Couch Bot. ');
 				} else if (results[0].visibility == 0 && interaction.user.id != user.id && !member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-					await interaction.reply(user.username + ' a choisi de ne pas rendre ses points visibles.');
+					await interaction.editReply(user.username + ' a choisi de ne pas rendre ses points visibles.');
 				} else {
 					exampleEmbed.setTitle('Points obtenus par ' + results[0].pseudo);
 					exampleEmbed.setDescription('Vous avez actuellement ' + results[0].points + ' points.');
-					connection.query('SELECT * FROM points where user_id = ' + user.id, async function (error, results, fields) {
+					connection.query('SELECT * FROM points where user_id = ' + user.id, async function (error, results) {
 						if (error) throw error;
 						console.log(results);
 						if (results.length == 0) {
@@ -42,11 +42,11 @@ module.exports = {
 									}
 								} else {
 									exampleEmbed.addFields({ name: 'Autres', value: 'Les autres actions ne sont pas visibles. Pour en avoir un aperçu, veuillez exécuter la commande /allactions.', inline: true });
+									break;
 								}
 							}
-
 						}
-						await interaction.reply({ embeds: [exampleEmbed] });
+						await interaction.editReply({ embeds: [exampleEmbed] });
 					});
 				}
 			});

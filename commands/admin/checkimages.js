@@ -25,10 +25,11 @@ module.exports = {
 								.setRequired(true)))),
 	async execute(interaction) {
 		const pool = require("../../db.js");
-		pool.getConnection(function (err, connection) {
+		pool.getConnection(async function (err, connection) {
+			await interaction.deferReply();
 			if (interaction.options.getSubcommandGroup() === 'see') {
 				if (interaction.options.getSubcommand() === 'all') {
-					connection.query('SELECT * from images WHERE verified = 0', async function (error, results, fields) {
+					connection.query('SELECT * from images WHERE verified = 0', async function (error, results) {
 						if (error) throw error;
 						console.log(results);
 						if (results.length == 0) {
@@ -46,7 +47,7 @@ module.exports = {
 					});
 				} else if (interaction.options.getSubcommand() === 'number') {
 					const id = interaction.options.getString('id');
-					connection.query('SELECT * FROM images WHERE id =' + id, async function (error, results, fields) {
+					connection.query('SELECT * FROM images WHERE id =' + id, async function (error, results) {
 						if (error) throw error;
 						console.log(results);
 						if (results.length == 0) {
@@ -72,45 +73,43 @@ module.exports = {
 							const response = await interaction.reply({ embeds: [em], components: [row] });
 							const collectorFilter = i => i.user.id === interaction.user.id;
 							try {
-								const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+								const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000,max:1 });
 								if (confirmation.customId === 'accepter') {
-									connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 1, results[0].id], async function (error, resulta) {
+									connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 1, results[0].id], async function (error) {
 										if (error) throw error;
-										connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [interaction.user.id], async function (error, results, fields) {
+										connection.query('UPDATE users SET points = points + 0.25 WHERE user_id = ?', [results[0].user_id], async function (error) {
 											if (error) throw error;
-											console.log(results);
 										});
-										connection.query('INSERT INTO points (user_id, points, reason) VALUES (?, ?, ?)', [interaction.user.id, 0.2, "Image acceptée"], async function (error, results, fields) {
+										connection.query('INSERT INTO points (user_id, points, reason) VALUES (?, ?, ?)', [results[0].user_id, 0.25, "Image acceptée"], async function (error) {
 											if (error) throw error;
-											console.log(results);
 										});
 										await confirmation.update('L\'image a bien été validée.');
-										connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa, fields) {
+										connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa) {
 											if (error) throw error;
 											console.log(resultsa);
 											if (resultsa.length > 0) {
 												const channel = interaction.client.channels.cache.get(resultsa[0].value);
 												if (channel) {
-													await channel.send('<@' + results[0].user_id + '>, votre image a été validée. Vous avez gagné 0.2 points !');
+													await channel.send('<@' + results[0].user_id + '>, votre image a été validée. Vous avez gagné 0.25 points !');
 												} else {
-													await interaction.followUp('Votre image a été validée. Vous avez gagné 0.2 points !');
+													await interaction.followUp('Votre image a été validée. Vous avez gagné 0.25 points !');
 												}
 											} else {
-												await interaction.reply('Votre image a été validée. Vous avez gagné 0.2 points !');
+												await interaction.reply('Votre image a été validée. Vous avez gagné 0.25 points !');
 											}
 										})
 									});
 								} else if (confirmation.customId === 'refuser') {
 									await confirmation.update({ content: 'Pas de point accordé', components: [] });
-									connection.query('SELECT * FROM images WHERE verified = 0 AND id =' + results[0].id, async function (error, results, fields) {
+									connection.query('SELECT * FROM images WHERE verified = 0 AND id =' + results[0].id, async function (error, results) {
 										if (error) throw error;
 										if (results.length == 0) {
 											await interaction.reply('Cette image n\'existe pas.');
 										} else {
-											connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 0, id], async function (error, resultse, fields) {
+											connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 0, id], async function (error, resultse) {
 												if (error) throw error;
 												console.log(resultse);
-												connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa, fields) {
+												connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa) {
 													if (error) throw error;
 													console.log(resultsa);
 													if (resultsa.length > 0) {

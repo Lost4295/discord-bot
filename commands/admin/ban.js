@@ -37,7 +37,7 @@ module.exports = {
         const collectorFilter = i => i.user.id === interaction.user.id;
 
         try {
-            const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+            const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000, max:1 });
             if (confirmation.customId === 'confirm') {
                 await interaction.guild.members.ban(target);
                 await confirmation.update({ content: `${target.username} a été banni pour la raison suivante : ${reason}`, components: [] });

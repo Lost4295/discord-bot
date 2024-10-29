@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,8 +14,9 @@ module.exports = {
     async execute(interaction) {
         const cible = interaction.options.getUser('cible');
         const pool = require("../../db.js");
-        pool.getConnection(function (err, connection) {
-            connection.query('SELECT warns FROM users where user_id = ?', [cible.id], async function (error, results, fields) {
+        pool.getConnection(async function (err, connection) {
+            await interaction.deferReply();
+            connection.query('SELECT warns FROM users where user_id = ?', [cible.id], async function (error, results) {
                 if (error) throw error;
                 console.log(results);
                 if (results) {
@@ -26,7 +26,7 @@ module.exports = {
                         connection.query(
                             'UPDATE USERS SET warns = 0 WHERE user_id = ?',
                             [cible.id],
-                            async function (error, results, fields) {
+                            async function (error) {
                                 if (error) throw error;
                                 await interaction.reply(`Les avertissements de <@${cible.id}> ont été retirés.`);
                             });

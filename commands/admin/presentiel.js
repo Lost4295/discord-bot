@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
-const { PASS, USER } = require('../../config.json');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,20 +14,21 @@ module.exports = {
     async execute(interaction) {
         const target = interaction.options.getUser('target');
         const pool = require("../../db.js");
-        pool.getConnection(function (err, connection) {
-            connection.query('SELECT * FROM users where user_id = ' + target.id, async function (error, results, fields) {
+        pool.getConnection(async function (err, connection) {
+            await interaction.deferReply();
+            connection.query('SELECT * FROM users where user_id = ' + target.id, async function (error, results) {
                 if (error) throw error;
                 console.log(results);
                 if (results[0] == null) {
-                    await interaction.reply(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
+                    await interaction.editReply(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
                 } else {
-                    connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, 0.5, "Présence à l'association en présentiel"], async function (error, results, fields) {
+                    connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, 0.5, "Présence à l'association en présentiel"], async function (error) {
                         if (error) throw error;
                     })
-                    connection.query('UPDATE users SET points = points + ' + 0.5 + ' where user_id = ' + target.id, async function (error, results, fields) {
+                    connection.query('UPDATE users SET points = points + ' + 0.5 + ' where user_id = ' + target.id, async function (error, results) {
                         if (error) throw error;
                         console.log(results);
-                        await interaction.reply(`<@${target.id}> a bien été enregistré comme présent à l'association !`);
+                        await interaction.editReply(`<@${target.id}> a bien été enregistré comme présent à l'association !`);
                     })
                 };
             });

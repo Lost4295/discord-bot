@@ -26,10 +26,11 @@ module.exports = {
 	,
 	async execute(interaction) {
 		const pool = require("../../db.js");
-		pool.getConnection(function (err, connection) {
+		pool.getConnection(async function (err, connection) {
+			await interaction.deferReply();
 			if (interaction.options.getSubcommandGroup() === 'see') {
 				if (interaction.options.getSubcommand() === 'all') {
-					connection.query('SELECT * from questions WHERE verified = 0', async function (error, results, fields) {
+					connection.query('SELECT * from questions WHERE verified = 0', async function (error, results) {
 						if (error) throw error;
 						console.log(results);
 						if (results.length == 0) {
@@ -47,7 +48,7 @@ module.exports = {
 					});
 				} else if (interaction.options.getSubcommand() === 'number') {
 					const id = interaction.options.getString('id');
-					connection.query('SELECT * FROM questions WHERE id =' + id, async function (error, results, fields) {
+					connection.query('SELECT * FROM questions WHERE id =' + id, async function (error, results) {
 						if (error) throw error;
 						console.log(results);
 						if (results.length == 0) {
@@ -72,20 +73,20 @@ module.exports = {
 							const response = await interaction.reply({ embeds: [em], components: [row] });
 							const collectorFilter = i => i.user.id === interaction.user.id;
 							try {
-								const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000 });
+								const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000, max:1 });
 								if (confirmation.customId === 'accepter') {
-									connection.query('UPDATE questions SET verified = ?, valid = ? WHERE user_id = ? AND id = ?', [1, 1, results[0].user_id, results[0].id], async function (error, rezz, fields) {
+									connection.query('UPDATE questions SET verified = ?, valid = ? WHERE user_id = ? AND id = ?', [1, 1, results[0].user_id, results[0].id], async function (error, rezz) {
 										if (error) throw error;
 										console.log(rezz);
-										connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [results[0].user_id], async function (error, re, fields) {
+										connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [results[0].user_id], async function (error, re) {
 											if (error) throw error;
 											console.log(re);
 										});
-										connection.query('INSERT INTO points (user_id, points, reason) VALUES (?, ?, ?)', [results[0].user_id, 0.2, "Question acceptée"], async function (error, ea, fields) {
+										connection.query('INSERT INTO points (user_id, points, reason) VALUES (?, ?, ?)', [results[0].user_id, 0.2, "Question acceptée"], async function (error, ea) {
 											if (error) throw error;
 											console.log(ea);
 										});
-										connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, hehe, fields) {
+										connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, hehe) {
 											if (error) throw error;
 											console.log(hehe);
 											if (hehe.length > 0) {
@@ -97,20 +98,20 @@ module.exports = {
 										})
 									})
 								} else if (confirmation.customId === 'refuser') {
-									connection.query('SELECT * FROM questions WHERE verified = 0 AND id =' + results[0].id, async function (error, results, fields) {
+									connection.query('SELECT * FROM questions WHERE verified = 0 AND id =' + results[0].id, async function (error, results) {
 										if (error) throw error;
 										console.log(results);
 										if (results.length == 0) {
 											await interaction.reply('Cette question potentielle n\'existe pas.');
 										} else {
-											connection.query('UPDATE questions SET verified = ?, valid = ? WHERE user_id = ? AND id = ?', [true, 0, results[0].user_id, results[0].id], async function (error, era, fields) {
+											connection.query('UPDATE questions SET verified = ?, valid = ? WHERE user_id = ? AND id = ?', [true, 0, results[0].user_id, results[0].id], async function (error, era) {
 												if (error) throw error;
 												console.log(era);
-												connection.query('SHOW WARNINGS', function (error, rs, fields) {
+												connection.query('SHOW WARNINGS', function (error, rs) {
 													if (error) throw error;
 													console.log(rs);
 												});
-												connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, result, fields) {
+												connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, result) {
 													if (error) throw error;
 													console.log(result);
 													if (result.length > 0) {

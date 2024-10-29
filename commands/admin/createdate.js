@@ -82,7 +82,7 @@ module.exports = {
 		console.log(date);
 		
 		connection.query('INSERT INTO dates (title, description, date, distanciel) VALUES (?, ?, TIMESTAMP(?), ?)', [title, description, date, distanciel],
-			async function (error, resultats, fields) {
+			async function (error, resultats) {
 				if (error) throw error;
 				console.log(resultats);
 				await interaction.reply({ content: 'L\'événement a bien été ajouté.', ephemeral: true });
