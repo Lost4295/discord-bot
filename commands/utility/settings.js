@@ -81,18 +81,18 @@ module.exports = {
 					return;
 				}
 				if (interaction.options.getSubcommandGroup() === 'visibility') {
-					if (interaction.options.getSubcommand() === 'private') {
+					if (interaction.options.getSubcommand() === 'off') {
 						connection.query('UPDATE users SET visibility = 0 WHERE user_id =' + interaction.user.id, async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 						});
-					} else if (interaction.options.getSubcommand() === 'public') {
+					} else if (interaction.options.getSubcommand() === 'on') {
 						connection.query('UPDATE users SET visibility = 1 WHERE user_id =' + interaction.user.id, async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 						});
 					}
-					await interaction.reply('Votre statut a bien été modifié.');
+					await interaction.editReply('Votre statut a bien été modifié.');
 				}
 				if (interaction.options.getSubcommandGroup() === 'pseudo') {
 					if (interaction.options.getSubcommand() === 'set') {
@@ -100,7 +100,7 @@ module.exports = {
 						connection.query('UPDATE users SET pseudo = ? WHERE user_id = ?', [pseudo, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.reply('Votre pseudo a bien été modifié.');
+							await interaction.editReply('Votre pseudo a bien été modifié.');
 						});
 					}
 				}
@@ -110,7 +110,7 @@ module.exports = {
 						connection.query('UPDATE users SET prenom = ? WHERE user_id = ?', [prenom, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.reply('Votre prénom a bien été modifié.');
+							await interaction.editReply('Votre prénom a bien été modifié.');
 						});
 					}
 				}
@@ -120,7 +120,7 @@ module.exports = {
 						connection.query('UPDATE users SET nom = ? WHERE user_id = ?', [nom, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.reply('Votre nom a bien été modifié.');
+							await interaction.editReply('Votre nom a bien été modifié.');
 						});
 					}
 				}
@@ -130,7 +130,7 @@ module.exports = {
 						connection.query('UPDATE users SET classe = ? WHERE user_id = ?', [classe, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.reply('Votre classe a bien été modifiée.');
+							await interaction.editReply('Votre classe a bien été modifiée.');
 						});
 					}
 				}

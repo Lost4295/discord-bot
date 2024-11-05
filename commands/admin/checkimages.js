@@ -33,7 +33,7 @@ module.exports = {
 						if (error) throw error;
 						console.log(results);
 						if (results.length == 0) {
-							await interaction.reply('Il n\'y a pas d\'image à vérifier.');
+							await interaction.editReply('Il n\'y a pas d\'image à vérifier.');
 						} else {
 							let em = new EmbedBuilder()
 							.setTitle('Images à vérifier')
@@ -42,7 +42,7 @@ module.exports = {
 							for (let i = 0; i < results.length; i++) {
 								em.addFields({ name: 'ID : ' + results[i].id, value: 'Image : ' + results[i].image });
 							}
-							await interaction.reply({ embeds: [em] });
+							await interaction.editReply({ embeds: [em] });
 						}
 					});
 				} else if (interaction.options.getSubcommand() === 'number') {
@@ -51,9 +51,9 @@ module.exports = {
 						if (error) throw error;
 						console.log(results);
 						if (results.length == 0) {
-							await interaction.reply('Cette image n\'existe pas.');
+							await interaction.editReply('Cette image n\'existe pas.');
 						} else if (results[0].verified == 1) {
-							await interaction.reply('Cette image a déjà été vérifiée.');
+							await interaction.editReply('Cette image a déjà été vérifiée.');
 						} else {
 							const refuser = new ButtonBuilder()
 								.setCustomId('refuser')
@@ -70,7 +70,7 @@ module.exports = {
 								.setImage(results[0].image);
 							em.addFields({ name: 'ID : ' + results[0].id, value: 'Image : ' + results[0].image });
 							const row = new ActionRowBuilder().addComponents(refuser, accepter);
-							const response = await interaction.reply({ embeds: [em], components: [row] });
+							const response = await interaction.editReply({ embeds: [em], components: [row] });
 							const collectorFilter = i => i.user.id === interaction.user.id;
 							try {
 								const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000,max:1 });
@@ -95,7 +95,7 @@ module.exports = {
 													await interaction.followUp('Votre image a été validée. Vous avez gagné 0.25 points !');
 												}
 											} else {
-												await interaction.reply('Votre image a été validée. Vous avez gagné 0.25 points !');
+												await interaction.editReply('Votre image a été validée. Vous avez gagné 0.25 points !');
 											}
 										})
 									});
@@ -104,7 +104,7 @@ module.exports = {
 									connection.query('SELECT * FROM images WHERE verified = 0 AND id =' + results[0].id, async function (error, results) {
 										if (error) throw error;
 										if (results.length == 0) {
-											await interaction.reply('Cette image n\'existe pas.');
+											await interaction.editReply('Cette image n\'existe pas.');
 										} else {
 											connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 0, id], async function (error, resultse) {
 												if (error) throw error;
@@ -115,7 +115,7 @@ module.exports = {
 													if (resultsa.length > 0) {
 														await interaction.client.channels.cache.get(resultsa[0].value).send('<@' + results[0].user_id + '>, votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point.  ');
 													} else {
-														await interaction.reply('Votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point. ');
+														await interaction.editReply('Votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point. ');
 													}
 												})
 											});

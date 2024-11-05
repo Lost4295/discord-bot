@@ -6,7 +6,8 @@ const connection = mysql.createPool({
     password: PASS,
     database: 'bot',
     waitForConnections: true,
-    connectionLimit: 10,
+    connectionLimit: 20,
+    idleTimeout: 20000,
     queueLimit: 0
 });
 

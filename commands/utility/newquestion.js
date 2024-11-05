@@ -25,7 +25,7 @@ module.exports = {
             connection.query('INSERT INTO questions (question, answer, valid, user_id) VALUES (?, ?, ?, ?)', [question, answer, 0, interaction.user.id], async function (error, results) {
                 if (error) throw error;
                 console.log(results);
-                await interaction.reply('La question a bien été ajoutée.');
+                await interaction.editReply('La question a bien été ajoutée.');
             });
             pool.releaseConnection(connection);
         });

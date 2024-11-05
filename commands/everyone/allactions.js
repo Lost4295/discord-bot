@@ -14,6 +14,7 @@ module.exports = {
 			connection.query('SELECT pseudo, points FROM users where user_id = ' + user.id, async function (error, results) {
 				if (error) throw error;
 				console.log(results);
+				let member = interaction.guild.members.cache.get(interaction.user.id);
 				if (results.length == 0) {
 					await interaction.editReply('Vous n\'êtes pas inscrit dans la base de données de Couch Bot. ');
 				} else if (results[0].visibility == 0 && interaction.user.id != user.id && !member.permissions.has(PermissionsBitField.Flags.Administrator)) {

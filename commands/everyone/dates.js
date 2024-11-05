@@ -27,6 +27,7 @@ module.exports = {
 						);
 					}
 				}
+				console.log(embed);
 				await interaction.editReply({ embeds: [embed] });
 			});
 			pool.releaseConnection(connection);

@@ -64,7 +64,7 @@ module.exports = {
 									.setStyle(ButtonStyle.Danger);
 								const row = new ActionRowBuilder()
 									.addComponents(cancel, confirm);
-								const response = await interaction.reply({
+								const response = await interaction.editReply({
 									content: `<@${target.id}>,  ${question}`,
 									components: [row],
 								});
