@@ -36,6 +36,10 @@ module.exports = {
                         await interaction.reply(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
                         return;
                     }
+                    connection.query('INSERT INTO quizzpoints (user_id, points, date) VALUES (' + target.id + ', ' + pts + ', NOW())', async function (error, results) {
+                        if (error) throw error;
+                        console.log(results);
+                    });
                     connection.query('UPDATE users SET quizzpoints = quizzpoints + ' + pts + ' where user_id = ' + target.id, async function (error, results) {
                         if (error) throw error;
                         console.log(results);

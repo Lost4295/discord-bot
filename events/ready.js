@@ -8,7 +8,7 @@ module.exports = {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 		const pool = require("../db.js");
 		let scheduledMessage = new cron.CronJob('00 00 14 * * *', () => {
-				pool.getConnection(function (err, connection) {
+			pool.getConnection(function (err, connection) {
 				// '00 30 10 * * *' = At 10:30:00am every day
 				// This runs every day at 10:30:00, you can do anything you want
 				// Specifing your guild (server) and your channel
@@ -19,14 +19,14 @@ module.exports = {
 					console.log(results);
 					if (results.length > 0) {
 						const channel = client.channels.cache.get('510741954083160066');
-						await channel.send("Une séance se prépare ! Elle sera "+( results[0].distanciel?"en distanciel":"en présentiel")+ "! Allez, à demain ! @here")
+						await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à demain ! @here")
 					} else {
 						connection.query('SELECT * from dates WHERE NOW() BETWEEN DATE_SUB(DATE_SUB(date, INTERVAL 5 MINUTE), INTERVAL 2 DAY) and date', async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 							if (results.length > 0) {
 								const channel = client.channels.cache.get('510741954083160066');
-								await channel.send("Une séance se prépare ! Elle sera "+( results[0].distanciel?"en distanciel":"en présentiel")+ "! Allez, à dans deux jours ! @here")
+								await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à dans deux jours ! @here")
 							}
 						});
 					}
@@ -49,39 +49,42 @@ module.exports = {
 								allow: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel],
 							},
 							{
-								id:"510739348069679115",
+								id: "510739348069679115",
 								deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel],
 							}
 						]
 						);
-						setTimeout(() => {
-							let end = new EmbedBuilder();
-							end.setTitle('L\'association est terminée pour aujourd\'hui ! 👋');
-							end.setDescription('Le salon des présences ferme ses portes. Merci à tous pour votre participation !');
-							end.setColor("#FF0000");
-							end.setTimestamp();
-							end.setImage('https://media3.giphy.com/media/JUSwkiO1Eh5K43ruN0/giphy.gif')
-							end.setFooter({ text: 'Couch Bot' });
-							channel.send({ embeds: [end] });
-							channel.permissionOverwrites.set([
-								{
-									id: '1029327286475968563',
-									deny: [PermissionsBitField.Flags.SendMessages],
-									allow: [PermissionsBitField.Flags.ViewChannel],
-								},
-							{
-								id:"510739348069679115",
-								deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel],
+						connection.query('SELECT * from dates WHERE NOW() BETWEEN date AND DATE_ADD(DATE_ADD(date, INTERVAL 8 HOURS), INTERVAL 2 MINUTE)', async function (error, results) {
+							if (error) throw error;
+							if (results.length > 0) {
+								let end = new EmbedBuilder();
+								end.setTitle('L\'association est terminée pour aujourd\'hui ! 👋');
+								end.setDescription('Le salon des présences ferme ses portes. Merci à tous pour votre participation !');
+								end.setColor("#FF0000");
+								end.setTimestamp();
+								end.setImage('https://media3.giphy.com/media/JUSwkiO1Eh5K43ruN0/giphy.gif')
+								end.setFooter({ text: 'Couch Bot' });
+								channel.send({ embeds: [end] });
+								channel.permissionOverwrites.set([
+									{
+										id: '1029327286475968563',
+										deny: [PermissionsBitField.Flags.SendMessages],
+										allow: [PermissionsBitField.Flags.ViewChannel],
+									},
+									{
+										id: "510739348069679115",
+										deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel],
+									}
+								]
+								);
 							}
-							]
-							);
-						}, 21600000);
+						});
 					}
 				});
 				pool.releaseConnection(connection);
 			});
 		});
-			// When you want to start it, use:
-			scheduledMessage.start();
+		// When you want to start it, use:
+		scheduledMessage.start();
 	},
 };

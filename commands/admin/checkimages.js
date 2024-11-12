@@ -72,8 +72,8 @@ module.exports = {
 							const row = new ActionRowBuilder().addComponents(refuser, accepter);
 							const response = await interaction.editReply({ embeds: [em], components: [row] });
 							const collectorFilter = i => i.user.id === interaction.user.id;
+							const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000,max:1 });
 							try {
-								const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000,max:1 });
 								if (confirmation.customId === 'accepter') {
 									connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 1, results[0].id], async function (error) {
 										if (error) throw error;
@@ -124,7 +124,7 @@ module.exports = {
 								}
 							} catch (e) {
 								console.log(e);
-								await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
+								await confirmation.update({ content: 'Confirmation not received within 1 minute, cancelling', components: [] });
 							}
 						}
 					});
