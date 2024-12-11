@@ -12,6 +12,7 @@ module.exports = {
                 .setRequired(true))
         .setDMPermission(false),
     async execute(interaction) {
-        await interaction.reply(interaction.options.getString('message'));
+        const channel = interaction.channel;
+        await channel.send(interaction.options.getString('message'));
     }
 };

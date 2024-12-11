@@ -39,8 +39,8 @@ module.exports = {
 							.setTitle('Images à vérifier')
 							.setDescription('Voici les images à vérifier.')
 							.setColor("Blurple");
-							for (let i = 0; i < results.length; i++) {
-								em.addFields({ name: 'ID : ' + results[i].id, value: 'Image : ' + results[i].image });
+							for (const element of results) {
+								em.addFields({ name: 'ID : ' + element.id, value: 'Image : ' + element.image });
 							}
 							await interaction.editReply({ embeds: [em] });
 						}

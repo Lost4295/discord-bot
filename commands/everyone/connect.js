@@ -15,6 +15,10 @@ module.exports = {
 		const pool = require("../../db.js");
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
+			if (interaction.channel.id != '772516231952990208') {
+				await interaction.editReply('Cette commande ne peut être utilisée que dans le channel <#772516231952990208>.');
+				return;
+			}
 			connection.query("SELECT * FROM dates WHERE NOW() BETWEEN date AND DATE_ADD(date, INTERVAL 8 HOUR) AND distanciel = 1 ORDER BY date ASC LIMIT 1; ", async function (error, results) {
 				if (error) throw error;
 				if (results.length == 0) {

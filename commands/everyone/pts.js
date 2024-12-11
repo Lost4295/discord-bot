@@ -25,8 +25,18 @@ module.exports = {
 				} else if (results[0].visibility == 0 && interaction.user.id != user.id && !member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					await interaction.editReply(user.username + ' a choisi de ne pas rendre ses points visibles.');
 				} else {
+					var desc;
+					if (interaction.user.id != user.id){
+						desc = results[0].pseudo +' a';
+					} else {
+						desc = 'Vous avez';
+					}
+					desc += ' actuellement ' + results[0].points + ' points.';
+					if (results[0].points >=4){
+						desc += " Votre note sera cependant limitée à 4 points.";
+					}
 					exampleEmbed.setTitle('Points obtenus par ' + results[0].pseudo);
-					exampleEmbed.setDescription('Vous avez actuellement ' + results[0].points + ' points.');
+					exampleEmbed.setDescription(desc);
 					connection.query('SELECT * FROM points where user_id = ' + user.id, async function (error, results) {
 						if (error) throw error;
 						console.log(results);

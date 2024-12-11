@@ -81,7 +81,7 @@ module.exports = {
 						await interaction.reply({ content: 'L\'événement n\'existe pas.', ephemeral: true });
 						return;
 					}
-					const dateres = Date.parse(resultats[0].date);
+					const dateres = new Date(Date.parse(resultats[0].date));
 					console.log(dateres); 
 					const title = interaction.options.getString('title')??resultats[0].title;
 					const description = interaction.options.getString('description')??resultats[0].description;
@@ -91,11 +91,11 @@ module.exports = {
 					const distanciel = interaction.options.getBoolean('distanciel')??resultats[0].distanciel;
 					const date = dayjs({ year: year, month: month - 1, day: day, hour: 14, minute: 0, second: 0, millisecond: 0 }).format('YYYY-MM-DD HH:mm:ss');
 					console.log(date);
-					connection.query('INSERT INTO dates (title, description, date, distanciel) VALUES (?, ?, TIMESTAMP(?), ?)', [title, description, date, distanciel],
+					connection.query('UPDATE dates set title=?, description=?, date=TIMESTAMP(?), distanciel=? WHERE id =?', [title, description, date, distanciel, id],
 						async function (error, resultats) {
 							if (error) throw error;
 							console.log(resultats);
-							await interaction.reply({ content: 'L\'événement a bien été modifié.', ephemeral: true });
+							await interaction.editReply({ content: 'L\'événement a bien été modifié.', ephemeral: true });
 						});
 				});
 			pool.releaseConnection(connection);

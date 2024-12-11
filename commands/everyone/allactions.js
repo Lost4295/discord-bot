@@ -34,7 +34,7 @@ module.exports = {
 								}
 							}
 							if (message.length > 2000) {
-								await interaction.reply('Le message est trop long pour être envoyé en une seule fois. Veuillez consulter votre messagerie privée.');
+								await interaction.editReply('Le message est trop long pour être envoyé en une seule fois. Veuillez consulter votre messagerie privée.');
 								while (message.length > 0) {
 									await interaction.user.send(message.slice(0, 2000));
 									message = message.slice(2000);
@@ -61,16 +61,16 @@ module.exports = {
 							if (error) throw error;
 							console.log(results);
 							if (results.length != 0) {
-								for (let i = 0; i < results.length; i++) {
-									if (results[i].points < 0) {
-										message += '## Perte de Points\n' + results[i].points * -1 + " points perdus le " + results[i].date + " pour la raison suivante : " + results[i].reason + '\n';
+								for (const element of results) {
+									if (element.points < 0) {
+										message += '## Perte de Points\n' + element.points * -1 + " points perdus le " + element.date + " pour la raison suivante : " + element.reason + '\n';
 									} else {
-										message += '## Gain de Points\n' + results[i].points + " points gagnés le " + results[i].date + " pour la raison suivante : " + results[i].reason + '\n';
+										message += '## Gain de Points\n' + element.points + " points gagnés le " + element.date + " pour la raison suivante : " + element.reason + '\n';
 									}
 								}
 							}
 							if (message.length > 2000) {
-								await interaction.reply('Le message est trop long pour être envoyé en une seule fois. Veuillez consulter votre messagerie privée.');
+								await interaction.editReply('Le message est trop long pour être envoyé en une seule fois. Veuillez consulter votre messagerie privée.');
 								while (message.length > 0) {
 									await interaction.user.send(message.slice(0, 2000));
 									message = message.slice(2000);

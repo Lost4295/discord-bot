@@ -7,31 +7,40 @@ module.exports = {
 	execute(client) {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 		const pool = require("../db.js");
-		let scheduledMessage = new cron.CronJob('00 00 14 * * *', () => {
-			pool.getConnection(function (err, connection) {
+		pool.getConnection(function (err, connection) {
+			// let scheduledMessageTest = new cron.CronJob('30 * * * * *', () => {
+			// 	connection.query('SELECT * from dates WHERE DATE(date) = DATE(DATE_ADD(NOW(), INTERVAL 1 DAY));', async function (error, results) {
+			// 		if (error) throw error;
+			// 		console.log(results);
+			// 		if (results.length > 0) {
+			// 			const channel = client.channels.cache.get('1262692453358501919');
+			// 			await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à demain ! @here")
+			// 		}
+			// 	});
+			// });
+			let scheduledMessage = new cron.CronJob('00 00 14 * * *', () => {
 				// '00 30 10 * * *' = At 10:30:00am every day
 				// This runs every day at 10:30:00, you can do anything you want
 				// Specifing your guild (server) and your channel
 				// const channel = client.channels.cache.get('1262692453358501919');
 				// channel.send('You message');
-				connection.query('SELECT * from dates WHERE NOW() BETWEEN DATE_SUB(DATE_SUB(date, INTERVAL 5 MINUTE), INTERVAL 1 DAY) and date', async function (error, results) {
+				connection.query('SELECT * from dates WHERE DATE(date) = DATE(DATE_ADD(NOW(), INTERVAL 1 DAY));', async function (error, results) {
 					if (error) throw error;
 					console.log(results);
 					if (results.length > 0) {
 						const channel = client.channels.cache.get('510741954083160066');
 						await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à demain ! @here")
-					} else {
-						connection.query('SELECT * from dates WHERE NOW() BETWEEN DATE_SUB(DATE_SUB(date, INTERVAL 5 MINUTE), INTERVAL 2 DAY) and date', async function (error, results) {
-							if (error) throw error;
-							console.log(results);
-							if (results.length > 0) {
-								const channel = client.channels.cache.get('510741954083160066');
-								await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à dans deux jours ! @here")
-							}
-						});
 					}
 				});
-				connection.query('SELECT * from dates WHERE NOW() BETWEEN date AND DATE_ADD(date, INTERVAL 5 MINUTE)', async function (error, results) {
+				connection.query('SELECT * from dates WHERE DATE(date) = DATE(DATE_ADD(NOW(), INTERVAL 2 DAY));', async function (error, results) {
+					if (error) throw error;
+					console.log(results);
+					if (results.length > 0) {
+						const channel = client.channels.cache.get('510741954083160066');
+						await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à dans deux jours ! @here")
+					}
+				});
+				connection.query('SELECT * from dates WHERE DATE(date) = DATE(NOW()) and distanciel =1', async function (error, results) {
 					if (error) throw error;
 					if (results.length > 0) {
 						const channel = client.channels.cache.get('772516231952990208');
@@ -54,37 +63,42 @@ module.exports = {
 							}
 						]
 						);
-						connection.query('SELECT * from dates WHERE NOW() BETWEEN date AND DATE_ADD(DATE_ADD(date, INTERVAL 8 HOURS), INTERVAL 2 MINUTE)', async function (error, results) {
-							if (error) throw error;
-							if (results.length > 0) {
-								let end = new EmbedBuilder();
-								end.setTitle('L\'association est terminée pour aujourd\'hui ! 👋');
-								end.setDescription('Le salon des présences ferme ses portes. Merci à tous pour votre participation !');
-								end.setColor("#FF0000");
-								end.setTimestamp();
-								end.setImage('https://media3.giphy.com/media/JUSwkiO1Eh5K43ruN0/giphy.gif')
-								end.setFooter({ text: 'Couch Bot' });
-								channel.send({ embeds: [end] });
-								channel.permissionOverwrites.set([
-									{
-										id: '1029327286475968563',
-										deny: [PermissionsBitField.Flags.SendMessages],
-										allow: [PermissionsBitField.Flags.ViewChannel],
-									},
-									{
-										id: "510739348069679115",
-										deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel],
-									}
-								]
-								);
-							}
-						});
 					}
 				});
-				pool.releaseConnection(connection);
 			});
+			let scheduledMessage2 = new cron.CronJob('00 00 22 * * *', () => {
+				connection.query('SELECT * from dates WHERE DATE(date) = DATE(NOW()) and distanciel =1', async function (error, results) {
+					if (error) throw error;
+					if (results.length > 0) {
+						let end = new EmbedBuilder();
+						const channel = client.channels.cache.get('772516231952990208');
+						end.setTitle('L\'association est terminée pour aujourd\'hui ! 👋');
+						end.setDescription('Le salon des présences ferme ses portes. Merci à tous pour votre participation !');
+						end.setColor("#FF0000");
+						end.setTimestamp();
+						end.setImage('https://media3.giphy.com/media/JUSwkiO1Eh5K43ruN0/giphy.gif')
+						end.setFooter({ text: 'Couch Bot' });
+						channel.send({ embeds: [end] });
+						channel.permissionOverwrites.set([
+							{
+								id: '1029327286475968563',
+								deny: [PermissionsBitField.Flags.SendMessages],
+								allow: [PermissionsBitField.Flags.ViewChannel],
+							},
+							{
+								id: "510739348069679115",
+								deny: [PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ViewChannel],
+							}
+						]
+						);
+					}
+				});
+			});
+			scheduledMessage.start();
+			scheduledMessage2.start();
+			// scheduledMessageTest.start();
+			pool.releaseConnection(connection);
 		});
 		// When you want to start it, use:
-		scheduledMessage.start();
 	},
 };
