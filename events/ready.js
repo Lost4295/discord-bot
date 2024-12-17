@@ -7,23 +7,13 @@ module.exports = {
 	execute(client) {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 		const pool = require("../db.js");
-		pool.getConnection(function (err, connection) {
-			// let scheduledMessageTest = new cron.CronJob('30 * * * * *', () => {
-			// 	connection.query('SELECT * from dates WHERE DATE(date) = DATE(DATE_ADD(NOW(), INTERVAL 1 DAY));', async function (error, results) {
-			// 		if (error) throw error;
-			// 		console.log(results);
-			// 		if (results.length > 0) {
-			// 			const channel = client.channels.cache.get('1262692453358501919');
-			// 			await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à demain ! @here")
-			// 		}
-			// 	});
-			// });
-			let scheduledMessage = new cron.CronJob('00 00 14 * * *', () => {
-				// '00 30 10 * * *' = At 10:30:00am every day
-				// This runs every day at 10:30:00, you can do anything you want
-				// Specifing your guild (server) and your channel
-				// const channel = client.channels.cache.get('1262692453358501919');
-				// channel.send('You message');
+		let scheduledMessage = new cron.CronJob('00 00 14 * * *', () => {
+			// '00 30 10 * * *' = At 10:30:00am every day
+			// This runs every day at 10:30:00, you can do anything you want
+			// Specifing your guild (server) and your channel
+			// const channel = client.channels.cache.get('1262692453358501919');
+			// channel.send('You message');
+			pool.getConnection(function (err, connection) {
 				connection.query('SELECT * from dates WHERE DATE(date) = DATE(DATE_ADD(NOW(), INTERVAL 1 DAY));', async function (error, results) {
 					if (error) throw error;
 					console.log(results);
@@ -65,8 +55,11 @@ module.exports = {
 						);
 					}
 				});
+				pool.releaseConnection(connection);
 			});
-			let scheduledMessage2 = new cron.CronJob('00 00 22 * * *', () => {
+		});
+		let scheduledMessage2 = new cron.CronJob('00 00 22 * * *', () => {
+			pool.getConnection(function (err, connection) {
 				connection.query('SELECT * from dates WHERE DATE(date) = DATE(NOW()) and distanciel =1', async function (error, results) {
 					if (error) throw error;
 					if (results.length > 0) {
@@ -93,12 +86,12 @@ module.exports = {
 						);
 					}
 				});
+				pool.releaseConnection(connection);
 			});
-			scheduledMessage.start();
-			scheduledMessage2.start();
-			// scheduledMessageTest.start();
-			pool.releaseConnection(connection);
 		});
-		// When you want to start it, use:
-	},
+		scheduledMessage.start();
+		scheduledMessage2.start();
+		// scheduledMessageTest.start();
+	}
 };
+	// When you want to start it, use:
