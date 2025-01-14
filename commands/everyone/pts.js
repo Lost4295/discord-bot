@@ -4,20 +4,30 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('getpts')
 		.setDescription('Pour voir les points obtenus.')
+		.addStringOption(option => option.setName('semestre').setDescription("Quel Semestre vous aimeriez voir.").setChoices(
+			{name:"1", value:"Semestre 1"},
+			{name:"2", value:"Semestre 2"},
+		).setRequired(true))
 		.addUserOption(option => option.setName('user').setDescription('L\'utilisateur dont vous voulez voir les points.')),
 	async execute(interaction) {
 		const pool = require("../../db.js");
 		pool.getConnection(async function (err, connection) {
 			const user = interaction.options.getUser('user') ?? interaction.user;
+			const semestre = interaction.options.getString('semestre');
 			let exampleEmbed = new EmbedBuilder()
 				.setColor(0x0099FF)
 				.setThumbnail(user.avatarURL())
 				.setTimestamp()
 				.setFooter({ text: 'Couch Bot' });
-
 			const member = interaction.guild.members.cache.get(interaction.user.id);
 			await interaction.deferReply();
-			connection.query('SELECT pseudo, points, visibility FROM users where user_id = ' + user.id, async function (error, results) {
+			let query;
+			if (semestre =="1"){
+				query = 'SELECT pseudo, points, visibility, is_admin FROM users where user_id =';
+			} else if (semestre =="2"){
+				query = 'SELECT pseudo, points2, visibility, is_admin FROM users where user_id =';
+			}
+			connection.query(query + user.id, async function (error, results) {
 				if (error) throw error;
 				console.log(results);
 				if (results.length == 0) {
@@ -25,19 +35,27 @@ module.exports = {
 				} else if (results[0].visibility == 0 && interaction.user.id != user.id && !member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					await interaction.editReply(user.username + ' a choisi de ne pas rendre ses points visibles.');
 				} else {
-					var desc;
+					let desc;
 					if (interaction.user.id != user.id){
 						desc = results[0].pseudo +' a';
 					} else {
 						desc = 'Vous avez';
 					}
 					desc += ' actuellement ' + results[0].points + ' points.';
-					if (results[0].points >=4){
+					if (results[0].points >=4 && results[0].is_admin == 0){
 						desc += " Votre note sera cependant limitée à 4 points.";
+					} else if (results[0].points >= 6 && results[0].is_admin == 1){
+						desc += " Votre note sera cependant limitée à 6 points.";
 					}
 					exampleEmbed.setTitle('Points obtenus par ' + results[0].pseudo);
 					exampleEmbed.setDescription(desc);
-					connection.query('SELECT * FROM points where user_id = ' + user.id, async function (error, results) {
+					let query2;
+					if (semestre =="1"){
+						query2 ='SELECT * FROM points where user_id = '
+					} else if (semestre =="2"){
+						query2 ='SELECT * FROM points_s2 where user_id = '
+					}
+					connection.query(query2 + user.id, async function (error, results) {
 						if (error) throw error;
 						console.log(results);
 						if (results.length == 0) {

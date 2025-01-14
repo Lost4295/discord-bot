@@ -78,11 +78,11 @@ module.exports = {
 									connection.query('UPDATE questions SET verified = ?, valid = ? WHERE user_id = ? AND id = ?', [1, 1, results[0].user_id, results[0].id], async function (error, rezz) {
 										if (error) throw error;
 										console.log(rezz);
-										connection.query('UPDATE users SET points = points + 0.2 WHERE user_id = ?', [results[0].user_id], async function (error, re) {
+										connection.query('UPDATE users SET points_s2 = points_s2 + 0.2 WHERE user_id = ?', [results[0].user_id], async function (error, re) {
 											if (error) throw error;
 											console.log(re);
 										});
-										connection.query('INSERT INTO points (user_id, points, reason) VALUES (?, ?, ?)', [results[0].user_id, 0.2, "Question acceptée"], async function (error, ea) {
+										connection.query('INSERT INTO points_s2 (user_id, points, reason) VALUES (?, ?, ?)', [results[0].user_id, 0.2, "Question acceptée"], async function (error, ea) {
 											if (error) throw error;
 											console.log(ea);
 										});

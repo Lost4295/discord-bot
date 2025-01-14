@@ -90,19 +90,19 @@ module.exports = {
 									if (r == results[0].answer) {
 										await interaction.editReply({ content: 'Bonne réponse !' });
 										await interaction.followUp({ content: '<@' + target.id + '>, tu as gagné 0.25 points !' });
-										connection.query("UPDATE users SET points = points + 0.25 where user_id = " + target.id, async function (error) {
+										connection.query("UPDATE users SET points_s2 = points_s2 + 0.25 where user_id = " + target.id, async function (error) {
 											if (error) throw error;
 										})
-										connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, 0.25, 'Bonne réponse'], async function (error) {
+										connection.query('INSERT INTO points_s2 (user_id, points, reason) VALUES (?,?,?)', [target.id, 0.25, 'Bonne réponse'], async function (error) {
 											if (error) throw error;
 										})
 									} else {
 										await interaction.editReply({ content: 'Mauvaise réponse !' });
 										await interaction.followUp({ content: '<@' + target.id + '>, tu as gagné 0.15 points !' });
-										connection.query("UPDATE users SET points = points + 0.15 where user_id = " + target.id, async function (error) {
+										connection.query("UPDATE users SET points_s2 = points_s2 + 0.15 where user_id = " + target.id, async function (error) {
 											if (error) throw error;
 										})
-										connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, 0.15, 'Mauvaise réponse'], async function (error) {
+										connection.query('INSERT INTO points_s2 (user_id, points, reason) VALUES (?,?,?)', [target.id, 0.15, 'Mauvaise réponse'], async function (error) {
 											if (error) throw error;
 										})
 									}

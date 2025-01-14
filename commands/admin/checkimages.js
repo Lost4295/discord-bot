@@ -77,10 +77,10 @@ module.exports = {
 								if (confirmation.customId === 'accepter') {
 									connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 1, results[0].id], async function (error) {
 										if (error) throw error;
-										connection.query('UPDATE users SET points = points + 0.25 WHERE user_id = ?', [results[0].user_id], async function (error) {
+										connection.query('UPDATE users SET points_s2 = points_s2 + 0.25 WHERE user_id = ?', [results[0].user_id], async function (error) {
 											if (error) throw error;
 										});
-										connection.query('INSERT INTO points (user_id, points, reason) VALUES (?, ?, ?)', [results[0].user_id, 0.25, "Image acceptée"], async function (error) {
+										connection.query('INSERT INTO points_s2 (user_id, points, reason) VALUES (?, ?, ?)', [results[0].user_id, 0.25, "Image acceptée"], async function (error) {
 											if (error) throw error;
 										});
 										await confirmation.update('L\'image a bien été validée.');

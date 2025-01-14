@@ -16,23 +16,38 @@ module.exports = {
 				.setDescription('Voir tout le leaderboard.')
 				.setRequired(false)
 		)
+		.addStringOption(option =>
+			option
+				.setName('semestre')
+				.setDescription("Quel Semestre vous aimeriez voir.")
+				.setChoices(
+					{ name: "1", value: "Semestre 1" },
+					{ name: "2", value: "Semestre 2" },
+				))
 		.setDMPermission(false),
 	async execute(interaction) {
 
 		const quizz = interaction.options.getBoolean('quizz') ?? false;
 		const full = interaction.options.getBoolean('full') ?? false;
+		const semestre = interaction.options.getString('semestre') ?? "1";
 		const pool = require("../../db.js");
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
 			let query;
 			let query2;
+			let ss2 = false;
 			if (quizz) {
 				query = 'SELECT * from users WHERE visibility=1 ORDER BY quizzpoints DESC';
 				query2 = 'SELECT * from users ORDER BY quizzpoints DESC';
-			} else {
+			} else if (semestre == "1") {
 				query = 'SELECT * from users WHERE visibility=1 ORDER BY points DESC';
 				query2 = 'SELECT * from users ORDER BY points DESC';
+			} else if (semestre == "2") {
+				query = 'SELECT * from users WHERE visibility=1 ORDER BY points_s2 DESC';
+				query2 = 'SELECT * from users ORDER BY points_s2 DESC';
+				ss2 = true;
 			}
+
 			connection.query(query, async function (error, resultats) {
 				if (error) throw error;
 				console.log(resultats);
@@ -43,7 +58,15 @@ module.exports = {
 						message += 'Aucun joueur n\'a encore de points et les a rendu publics.';
 					}
 					for (let i = 0; i < len; i++) {
-						message += ` - ${i + 1} ${resultats[i].pseudo} Points : ${!quizz ? resultats[i].points : resultats[i].quizzpoints}\n`;
+						let points;
+						if (quizz){
+							points = resultats[i].quizzpoints;
+						} else if (ss2){
+							points = resultats[i].points_s2;
+						} else {
+							points =resultats[i].points;
+						}
+						message += ` - ${i + 1} ${resultats[i].pseudo} Points : ${points} \n`;
 					}
 					let messageLength = message.length;
 					if (messageLength > 2000) {
@@ -65,7 +88,15 @@ module.exports = {
 						embed.addFields({ name: 'Pas de joueur', value: 'Aucun joueur n\'a encore de points et les a rendu publics.' });
 					}
 					for (let i = 0; i < len; i++) {
-						embed.addFields({ name: ` #${i + 1} ${resultats[i].pseudo}`, value: `Points : ${!quizz ? resultats[i].points : resultats[i].quizzpoints}` });
+						let points;
+						if (quizz){
+							points = resultats[i].quizzpoints;
+						} else if (ss2){
+							points = resultats[i].points_s2;
+						} else {
+							points =resultats[i].points;
+						}
+						embed.addFields({ name: ` #${i + 1} ${resultats[i].pseudo}`, value: `Points : ${points}` });
 					}
 					embed.addFields(
 						{ name: '\u200B', value: '\u200B' },
@@ -84,7 +115,15 @@ module.exports = {
 							if (results.length == 0) {
 								embed.addFields({ name: 'Votre position', value: 'Vous n\'êtes pas inscrit dans la base de données de Couch Bot.' })
 							} else {
-								embed.addFields({ name: `Votre position`, value: position + "", inline: true }, { name: `Vos points`, value: ((!quizz) ? results[0].points : results[0].quizzpoints) + "", inline: true })
+								let points;
+								if (quizz){
+									points = results[0].quizzpoints;
+								} else if (ss2){
+									points = results[0].points_s2;
+								} else {
+									points =results[0].points;
+								}
+								embed.addFields({ name: `Votre position`, value: position + "", inline: true }, { name: `Vos points`, value: points + "", inline: true })
 							}
 							await interaction.editReply({ embeds: [embed] });
 						});

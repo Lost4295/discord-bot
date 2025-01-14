@@ -35,7 +35,7 @@ module.exports = {
 						} else {
 							for (let i = 0; i < results.length; i++) {
 								if (i <= 23) {
- 										exampleEmbed.addFields({ name: 'Gain de Points', value: results[i].points + " points gagnés le " + results[i].date , inline: true });
+									exampleEmbed.addFields({ name: 'Gain de Points', value: results[i].points + " points gagnés le " + results[i].date, inline: true });
 								} else {
 									exampleEmbed.addFields({ name: 'Autres', value: 'Les autres actions ne sont pas visibles. Pour en avoir un aperçu, veuillez exécuter la commande /allactions.', inline: true });
 									break;

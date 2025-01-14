@@ -7,6 +7,7 @@ module.exports = {
 	execute(client) {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 		const pool = require("../db.js");
+		const t = client.channels.cache.get('1262692453358501919');
 		let scheduledMessage = new cron.CronJob('00 00 14 * * *', () => {
 			// '00 30 10 * * *' = At 10:30:00am every day
 			// This runs every day at 10:30:00, you can do anything you want
@@ -21,6 +22,7 @@ module.exports = {
 						const channel = client.channels.cache.get('510741954083160066');
 						await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à demain ! @here")
 					}
+					await t.send("Vérifié dates demain");
 				});
 				connection.query('SELECT * from dates WHERE DATE(date) = DATE(DATE_ADD(NOW(), INTERVAL 2 DAY));', async function (error, results) {
 					if (error) throw error;
@@ -29,6 +31,7 @@ module.exports = {
 						const channel = client.channels.cache.get('510741954083160066');
 						await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à dans deux jours ! @here")
 					}
+					await t.send("Vérifié dates dans deux jours");
 				});
 				connection.query('SELECT * from dates WHERE DATE(date) = DATE(NOW()) and distanciel =1', async function (error, results) {
 					if (error) throw error;
@@ -53,7 +56,9 @@ module.exports = {
 							}
 						]
 						);
+						await t.send("ouvert salon");
 					}
+					await t.send("Vérifié dates aujourd'hui");
 				});
 				pool.releaseConnection(connection);
 			});
@@ -84,6 +89,7 @@ module.exports = {
 							}
 						]
 						);
+						await t.send("fermé salon");
 					}
 				});
 				pool.releaseConnection(connection);
@@ -94,4 +100,4 @@ module.exports = {
 		// scheduledMessageTest.start();
 	}
 };
-	// When you want to start it, use:
+// When you want to start it, use:
