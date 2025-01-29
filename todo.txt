@@ -3,7 +3,7 @@ datechecker -> Envoyer un message si la date est enregistrée comme ayant une se
 ---- TOUT LE MONDE ----
 
 ---- ADMIN ----
-
+ngn
 ---- OK ----
 /help -> Récupérer les commandes disponibles
 
