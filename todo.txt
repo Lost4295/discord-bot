@@ -5,7 +5,7 @@ datechecker -> Envoyer un message si la date est enregistrée comme ayant une se
 ---- ADMIN ----
 
 ---- OK ----
-/help -> Récupérer les commandes disponibles
+/help -> Récupérer les commandes disponiblegfgs
 
 /newquestion -> Proposer une question à la base de données
 /checkquestions (adm) -> Vérifier les questions de la base de données
