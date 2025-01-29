@@ -21,8 +21,8 @@ module.exports = {
 				.setName('semestre')
 				.setDescription("Quel Semestre vous aimeriez voir.")
 				.setChoices(
-					{ name: "1", value: "Semestre 1" },
-					{ name: "2", value: "Semestre 2" },
+					{ value: "1", name: "Semestre 1" },
+					{ value: "2", name: "Semestre 2" },
 				))
 		.setDMPermission(false),
 	async execute(interaction) {

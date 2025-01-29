@@ -6,8 +6,8 @@ module.exports = {
 		.setDescription('Pour voir les points obtenus.')
 		.addUserOption(option => option.setName('user').setDescription('L\'utilisateur dont vous voulez voir les points.'))
 		.addStringOption(option => option.setName('semestre').setDescription("Quel semestre vous aimeriez voir.").setChoices(
-			{name:"1", value:"Semestre 1"},
-			{name:"2", value:"Semestre 2"},
+			{value:"1", name:"Semestre 1"},
+			{value:"2", name:"Semestre 2"},
 		))
 		.addBooleanOption(option => option.setName('quizz').setDescription('Voir les points gagnés au quizz.')),
 	async execute(interaction) {
