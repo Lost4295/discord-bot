@@ -21,18 +21,18 @@ module.exports = {
                 console.log(results);
                 if (results) {
                     if (results[0].warns == 0) {
-                        await interaction.followUp(`${cible.username} n'avait pas d'avertissements.`);
+                        await interaction.followUp({content:`${cible.username} n'avait pas d'avertissements.`});
                     } else {
                         connection.query(
                             'UPDATE USERS SET warns = 0 WHERE user_id = ?',
                             [cible.id],
                             async function (error) {
                                 if (error) throw error;
-                                await interaction.reply(`Les avertissements de <@${cible.id}> ont été retirés.`);
+                                await interaction.reply({content:`Les avertissements de <@${cible.id}> ont été retirés.`});
                             });
                     }
                 } else {
-                    await interaction.followUp(`${cible.username} n'est pas enregistré sur Couch Gaming. Vous pouvez directement le timeout avec /timeout.`);
+                    await interaction.followUp({content:`${cible.username} n'est pas enregistré sur Couch Gaming. Vous pouvez directement le timeout avec /timeout.`});
                 }
             });
             pool.releaseConnection(connection);

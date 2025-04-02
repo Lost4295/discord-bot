@@ -14,6 +14,6 @@ module.exports = {
     async execute(interaction) {
         const target = interaction.options.getUser('target');
         await interaction.guild.members.unban(target);
-        await interaction.reply(`${target.username} a été débanni.`);
+        await interaction.reply({content:`${target.username} a été débanni.`});
     },
 };

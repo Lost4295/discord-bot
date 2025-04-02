@@ -33,7 +33,7 @@ module.exports = {
                 if (error) throw error;
                 console.log(results);
                 if (results[0] == null) {
-                    await interaction.followUp(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
+                    await interaction.followUp({content:target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. '});
                 } else {
                     connection.query('INSERT INTO points_s2 (user_id, points, reason) VALUES (?,?,?)', [target.id, -pts, reason], async function (error) {
                         if (error) throw error;
@@ -41,7 +41,7 @@ module.exports = {
                     connection.query('UPDATE users SET points_s2 = points_s2 - ' + pts + ' where user_id = ' + target.id, async function (error, results) {
                         if (error) throw error;
                         console.log(results);
-                        await interaction.followUp('Points retirés avec succès');
+                        await interaction.followUp({content:'Points retirés avec succès'});
                     })
                 };
             });

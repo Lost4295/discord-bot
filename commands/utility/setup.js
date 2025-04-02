@@ -16,7 +16,7 @@ module.exports = {
         pool.getConnection(async function (err, connection) {
             if (err) {
                 console.log(err);
-                interaction.reply('La base de données ne fonctionne pas.');
+                interaction.reply({content:'La base de données ne fonctionne pas.'});
                 pool.releaseConnection(connection);
                 return;
             }
@@ -26,7 +26,7 @@ module.exports = {
                 connection.query('INSERT INTO important (name, value) VALUES ("channel", "' + channel + '")', function (error) {
                     if (error) throw error;
                 })
-                await interaction.reply(`Le channel ${channel} a été défini comme channel d'envoi par défaut du bot.`);
+                await interaction.reply({content:`Le channel ${channel} a été défini comme channel d'envoi par défaut du bot.`});
             })
             pool.releaseConnection(connection);
         });

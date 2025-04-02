@@ -17,7 +17,7 @@ module.exports = {
         pool.getConnection(async function (err, connection) {
             if (err) {
                 console.log(err);
-                interaction.reply('La base de données ne fonctionne pas.');
+                interaction.reply({content:'La base de données ne fonctionne pas.'});
                 pool.releaseConnection(connection);
                 return;
             }
@@ -28,10 +28,10 @@ module.exports = {
                 if (results.length == 1) {
                     connection.query('DELETE FROM blocked_users WHERE user_id = ?', [target.id], async function (error) {
                         if (error) throw error;
-                        await interaction.reply(target.username + ' a été débloqué avec succès.');
+                        await interaction.reply({content:target.username + ' a été débloqué avec succès.'});
                     });
                 } else {
-                    await interaction.reply(target.username + ' n\'est pas bloqué.');
+                    await interaction.reply({content:target.username + ' n\'est pas bloqué.'});
                 }
             });
             pool.releaseConnection(connection);

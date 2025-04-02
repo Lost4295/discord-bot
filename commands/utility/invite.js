@@ -16,6 +16,6 @@ module.exports = {
         )
             .catch(console.log);
 
-        interaction.reply(invite ? `Voilà un lien d'invitation temporaire : ${invite}` : "Une erreur s'est produite lors de la création de l'invitation.");
+        interaction.reply({content: invite ? `Voilà un lien d'invitation temporaire : ${invite}` : "Une erreur s'est produite lors de la création de l'invitation. Merci de réessayer plus tard.", ephemeral: true});
     }
 }

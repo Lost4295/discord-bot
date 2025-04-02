@@ -33,7 +33,7 @@ module.exports = {
                     if (error) throw error;
                     console.log(results);
                     if (results[0] == null) {
-                        await interaction.reply(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
+                        await interaction.reply({ content: target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. '});
                         return;
                     }
                     connection.query('INSERT INTO quizzpoints (user_id, points, date) VALUES (' + target.id + ', ' + pts + ', NOW())', async function (error, results) {
@@ -43,7 +43,7 @@ module.exports = {
                     connection.query('UPDATE users SET quizzpoints = quizzpoints + ' + pts + ' where user_id = ' + target.id, async function (error, results) {
                         if (error) throw error;
                         console.log(results);
-                        await interaction.reply('Points ( ' + pts + ' ) ajoutés avec succès à ' + target.username);
+                        await interaction.reply({content: 'Points ( ' + pts + ' ) ajoutés avec succès à ' + target.username});
                     })
                 });
                 pool.releaseConnection(connection);

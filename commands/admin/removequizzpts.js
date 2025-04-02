@@ -25,12 +25,12 @@ module.exports = {
                 if (error) throw error;
                 console.log(results);
                 if (results[0] == null) {
-                    await interaction.reply(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
+                    await interaction.reply({content:target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. '});
                 } else {
                     connection.query('UPDATE users SET quizzpoints = quizzpoints - ' + pts + ' where user_id = ' + target.id, async function (error, results) {
                         if (error) throw error;
                         console.log(results);
-                        await interaction.reply('Points ( ' + pts + ' ) retirés avec succès à ' + target.username);
+                        await interaction.reply({content:'Points ( ' + pts + ' ) retirés avec succès à ' + target.username});
                     })
                 };
             });

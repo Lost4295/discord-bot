@@ -14,6 +14,6 @@ module.exports = {
     async execute(interaction) {
         const cible = interaction.options.getMember('cible');
         await cible.timeout(null); 
-        await interaction.reply(`${cible.nickname?cible.nickname:cible.user.username} (${cible.user.username}) vient d'être gracié !`);
+        await interaction.reply({content:`${cible.nickname?cible.nickname:cible.user.username} (${cible.user.username}) vient d'être gracié !`});
     },
 };

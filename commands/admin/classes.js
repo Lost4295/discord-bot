@@ -1,10 +1,10 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('classes')
+		.setName('getclasses')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-		.setDescription('DEV // Donne les élèves et leur classe')
+		.setDescription('Donne les élèves inscrits et leur classe')
 		.setDMPermission(false),
 	async execute(interaction) {
 		const pool = require("../../db.js");
@@ -25,13 +25,13 @@ module.exports = {
 				}
 				let messageLength = message.length;
 				if (messageLength > 2000) {
-					await interaction.editReply(message.slice(0, 2000));
+					await interaction.editReply({content: message.slice(0, 2000)});
 					while (message.length > 0) {
 						message = message.slice(2000);
-						await interaction.followUp(message.slice(0, 2000));
+						await interaction.followUp({content: message.slice(0, 2000)});
 					}
 				} else {
-					await interaction.editReply(message);
+					await interaction.editReply({content: message});
 				}
 			})
 			pool.releaseConnection(connection);

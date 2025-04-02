@@ -24,9 +24,9 @@ module.exports = {
 					console.log(results);
 					let member = interaction.guild.members.cache.get(interaction.user.id);
 					if (results.length == 0) {
-						await interaction.editReply('Vous n\'êtes pas inscrit dans la base de données de Couch Bot. ');
+						await interaction.editReply({content:'Vous n\'êtes pas inscrit dans la base de données de Couch Bot. '});
 					} else if (results[0].visibility == 0 && interaction.user.id != user.id && !member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-						await interaction.editReply(user.username + ' a choisi de ne pas rendre ses points visibles.');
+						await interaction.editReply({content:user.username + ' a choisi de ne pas rendre ses points visibles.'});
 					} else {
 						message += 'Points obtenus par ' + results[0].pseudo + '\n';
 						message += 'Vous avez actuellement ' + results[0].quizzpoints + ' points. \n\n';
@@ -39,13 +39,13 @@ module.exports = {
 								}
 							}
 							if (message.length > 2000) {
-								await interaction.editReply('Le message est trop long pour être envoyé en une seule fois. Veuillez consulter votre messagerie privée.');
+								await interaction.editReply({content:'Le message est trop long pour être envoyé en une seule fois. Veuillez consulter votre messagerie privée.'});
 								while (message.length > 0) {
-									await interaction.user.send(message.slice(0, 2000));
+									await interaction.user.send({content:message.slice(0, 2000)});
 									message = message.slice(2000);
 								}
 							} else {
-								await interaction.editReply(message);
+								await interaction.editReply({content:message});
 							}
 						});
 					}
@@ -64,9 +64,9 @@ module.exports = {
 					console.log(results);
 					let member = interaction.guild.members.cache.get(interaction.user.id);
 					if (results.length == 0) {
-						await interaction.editReply('Vous n\'êtes pas inscrit dans la base de données de Couch Bot. ');
+						await interaction.editReply({content: 'Vous n\'êtes pas inscrit dans la base de données de Couch Bot. '});
 					} else if (results[0].visibility == 0 && interaction.user.id != user.id && !member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-						await interaction.editReply(user.username + ' a choisi de ne pas rendre ses points visibles.');
+						await interaction.editReply({content: user.username + ' a choisi de ne pas rendre ses points visibles.'});
 					} else {
 						let points;
 						let query2;
@@ -92,13 +92,13 @@ module.exports = {
 								}
 							}
 							if (message.length > 2000) {
-								await interaction.editReply('Le message est trop long pour être envoyé en une seule fois. Veuillez consulter votre messagerie privée.');
+								await interaction.editReply({content: 'Le message est trop long pour être envoyé en une seule fois. Veuillez consulter votre messagerie privée.'});
 								while (message.length > 0) {
-									await interaction.user.send(message.slice(0, 2000));
+									await interaction.user.send({content: message.slice(0, 2000)});
 									message = message.slice(2000);
 								}
 							} else {
-								await interaction.editReply(message);
+								await interaction.editReply({content: message});
 							}
 						});
 					}

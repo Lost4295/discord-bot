@@ -15,7 +15,7 @@ module.exports = {
         const cible = interaction.options.getUser('cible');
         const raison = interaction.options.getString('raison') ?? 'Aucune raison fournie';
 
-        await interaction.reply(`Expulsion de ${cible.username} pour la raison : ${raison}`);
+        await interaction.reply({content:`Expulsion de ${cible.username} pour la raison : ${raison}`});
         await interaction.guild.members.kick(cible);
     },
 };

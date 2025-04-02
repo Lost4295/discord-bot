@@ -13,12 +13,12 @@ module.exports = {
         .setDMPermission(false),
     async execute(interaction) {
         const cible = interaction.options.getUser('cible');
-        await interaction.reply(`Avertissement de <@${cible.id}> pour comportement inapproprié.`);
+        await interaction.reply({content:`Avertissement de <@${cible.id}> pour comportement inapproprié.`});
         const pool = require("../../db.js");
         pool.getConnection(async function (err, connection) {
             if (err) {
                 console.log(err);
-                interaction.reply('La base de données ne fonctionne pas.');
+                interaction.reply({content:'La base de données ne fonctionne pas.'});
                 pool.releaseConnection(connection);
                 return;
             }
@@ -32,7 +32,7 @@ module.exports = {
                         if (error) throw error;
                         console.log(results);
                         if (results[0].warns >= 3) {
-                            await interaction.followUp(`Expulsion de ${cible.username} pour avoir reçu 3 avertissements.`);
+                            await interaction.followUp({content:`Expulsion de ${cible.username} pour avoir reçu 3 avertissements.`});
                             await interaction.guild.members.kick(cible);
                         }
                     });

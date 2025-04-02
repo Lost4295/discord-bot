@@ -5,7 +5,12 @@ const path = require('node:path');
 const { Client, Collection, GatewayIntentBits } = require('discord.js');
 
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
+const client = new Client({ intents: [
+	GatewayIntentBits.Guilds,
+	GatewayIntentBits.GuildMessages,
+	GatewayIntentBits.MessageContent,
+	GatewayIntentBits.GuildIntegrations
+] });
 
 client.commands = new Collection();
 client.cooldowns = new Collection();

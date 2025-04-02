@@ -20,7 +20,7 @@ module.exports = {
                 if (error) throw error;
                 console.log(results);
                 if (results[0] == null) {
-                    await interaction.editReply(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
+                    await interaction.editReply({content: target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. '});
                 } else {
                     connection.query('INSERT INTO points_s2 (user_id, points, reason) VALUES (?,?,?)', [target.id, 0.5, "Présence à l'association en présentiel"], async function (error) {
                         if (error) throw error;
@@ -28,7 +28,7 @@ module.exports = {
                     connection.query('UPDATE users SET points_s2 = points_s2 + ' + 0.5 + ' where user_id = ' + target.id, async function (error, results) {
                         if (error) throw error;
                         console.log(results);
-                        await interaction.editReply(`<@${target.id}> a bien été enregistré comme présent à l'association !`);
+                        await interaction.editReply({content: `<@${target.id}> a bien été enregistré comme présent à l'association !`});
                     })
                 };
             });

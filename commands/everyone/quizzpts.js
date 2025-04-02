@@ -21,9 +21,9 @@ module.exports = {
 				if (error) throw error;
 				console.log(results);
 				if (results.length == 0) {
-					await interaction.editReply(user.username + ' n\'est inscrit dans la base de données de Couch Bot. ');
+					await interaction.editReply({content:user.username + ' n\'est inscrit dans la base de données de Couch Bot. '});
 				} else if (results[0].visibility == 0 && interaction.user.id != user.id && !member.permissions.has(PermissionsBitField.Flags.Administrator)) {
-					await interaction.editReply(user.username + ' a choisi de ne pas rendre ses points visibles.');
+					await interaction.editReply({content:user.username + ' a choisi de ne pas rendre ses points visibles.'});
 				} else {
 					exampleEmbed.setTitle('Points obtenus par ' + user.username);
 					exampleEmbed.setDescription('Vous avez actuellement ' + results[0].quizzpoints + ' points.');

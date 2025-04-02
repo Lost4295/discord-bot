@@ -25,13 +25,13 @@ module.exports = {
         const pts = interaction.options.getNumber('pts') ?? 0;
         const reason = interaction.options.getString('reason') ?? 'Aucune raison fournie';
         if (pts == 0) {
-            await interaction.reply('Veuillez fournir un nombre de points à ajouter.');
+            await interaction.reply({content:'Veuillez fournir un nombre de points à ajouter.'});
             return;
         } else if (pts < 0) {
-            await interaction.reply('Veuillez fournir un nombre de points positif.');
+            await interaction.reply({content:'Veuillez fournir un nombre de points positif.'});
             return;
         } else {
-            await interaction.reply(" Ajout de points ( " + pts + " ) à " + target.username);
+            await interaction.reply({content:" Ajout de points ( " + pts + " ) à " + target.username});
 
             const pool = require("../../db.js");
             pool.getConnection(function (err, connection) {
@@ -39,7 +39,7 @@ module.exports = {
                     if (error) throw error;
                     console.log(results);
                     if (results[0] == null) {
-                        await interaction.followUp(target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ');
+                        await interaction.followUp({content: target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. '});
                         return;
                     }
                     connection.query('INSERT INTO points_s2 (user_id, points, reason) VALUES (?,?,?)', [target.id, pts, reason], async function (error) {
@@ -48,7 +48,7 @@ module.exports = {
                     connection.query('UPDATE users SET points_s2 = points_s2 + ' + pts + ' where user_id = ' + target.id, async function (error, results) {
                         if (error) throw error;
                         console.log(results);
-                        await interaction.followUp('Points ajoutés avec succès');
+                        await interaction.followUp({content:'Points ajoutés avec succès'});
                     })
                 });
                 pool.releaseConnection(connection);

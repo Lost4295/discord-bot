@@ -42,23 +42,23 @@ module.exports = {
 		if (status) {
 			switch (status) {
 				case 'online':
-					await interaction.reply('Le bot est maintenant en ligne.');
+					await interaction.reply({content: 'Le bot est maintenant en ligne.'});
 					await interaction.client.user.setStatus(PresenceUpdateStatus.Online);
 					break;
 				case 'idle':
-					await interaction.reply('Le bot est maintenant absent.');
+					await interaction.reply({content: 'Le bot est maintenant absent.'});
 					await interaction.client.user.setStatus(PresenceUpdateStatus.Idle);
 					break;
 				case 'dnd':
-					await interaction.reply('Le bot est maintenant en mode ne pas déranger.');
+					await interaction.reply({content: 'Le bot est maintenant en mode ne pas déranger.'});
 					await interaction.client.user.setStatus(PresenceUpdateStatus.DoNotDisturb);
 					break;
 				case 'invisible':
-					await interaction.reply('Le bot est maintenant invisible.');
+					await interaction.reply({content: 'Le bot est maintenant invisible.'});
 					await interaction.client.user.setStatus(PresenceUpdateStatus.Invisible);
 					break;
 				default:
-					await interaction.reply('Vous devez spécifier un état valide.', { ephemeral: true });
+					await interaction.reply({content: 'Vous devez spécifier un état valide.',  ephemeral: true });
 					break;
 			}
 			reply = true;
@@ -67,54 +67,54 @@ module.exports = {
 			switch (activityType) {
 				case 'PLAYING':
 					if (!reply) {
-						await interaction.reply('Le bot joue maintenant à ' + activityName, { ephemeral: true });
+						await interaction.reply({content: 'Le bot joue maintenant à ' + activityName, ephemeral: true });
 					} else {
-						await interaction.reply('Le bot joue maintenant à ' + activityName, { ephemeral: true });
+						await interaction.followUp({content: 'Le bot joue maintenant à ' + activityName, ephemeral: true });
 					}
 					await interaction.client.user.setActivity(activityName, { type: ActivityType.Playing });
 					break;
 				case 'LISTENING':
 					if (!reply) {
-						await interaction.reply('Le bot écoute maintenant ' + activityName, { ephemeral: true });
+						await interaction.reply({content: 'Le bot écoute maintenant ' + activityName, ephemeral: true });
 					} else {
-						await interaction.followUp('Le bot écoute maintenant ' + activityName, { ephemeral: true });
+						await interaction.followUp({content: 'Le bot écoute maintenant ' + activityName, ephemeral: true });
 					}
 					await interaction.client.user.setActivity(activityName, { type: ActivityType.Listening });
 					break;
 				case 'WATCHING':
 					if (!reply) {
-						await interaction.reply('Le bot regarde maintenant ' + activityName, { ephemeral: true });
+						await interaction.reply({content: 'Le bot regarde maintenant ' + activityName, ephemeral: true });
 					} else {
-						await interaction.followUp('Le bot regarde maintenant ' + activityName, { ephemeral: true });
+						await interaction.followUp({content: 'Le bot regarde maintenant ' + activityName, ephemeral: true });
 					}
 					await interaction.client.user.setActivity(activityName, { type: ActivityType.Watching });
 					break;
 				case 'STREAMING':
 					if (!reply) {
-						await interaction.reply('Le bot diffuse maintenant ' + activityName, { ephemeral: true });
+						await interaction.reply({content: 'Le bot diffuse maintenant ' + activityName, ephemeral: true });
 					} else {
-						await interaction.followUp('Le bot diffuse maintenant ' + activityName, { ephemeral: true });
+						await interaction.followUp({content: 'Le bot diffuse maintenant ' + activityName, ephemeral: true });
 					}
 					await interaction.client.user.setActivity(activityName, { type: ActivityType.Streaming });
 					break;
 				case 'COMPETING':
 					if (!reply) {
-						await interaction.reply('Le bot est maintenant en compétition sur ' + activityName, { ephemeral: true });
+						await interaction.reply({content: 'Le bot est maintenant en compétition sur ' + activityName, ephemeral: true });
 					} else {
-						await interaction.followUp('Le bot est maintenant en compétition sur ' + activityName, { ephemeral: true });
+						await interaction.followUp({content: 'Le bot est maintenant en compétition sur ' + activityName, ephemeral: true });
 					}
 					await interaction.client.user.setActivity(activityName, { type: ActivityType.Competing });
 					break;
 				case 'CUSTOM_STATUS':
 					if (!reply) {
-						await interaction.reply('Le bot a maintenant un statut personnalisé : ' + activityName, { ephemeral: true });
+						await interaction.reply({content: 'Le bot a maintenant un statut personnalisé : ' + activityName, ephemeral: true });
 					} else {
-						await interaction.followUp('Le bot a maintenant un statut personnalisé : ' + activityName, { ephemeral: true });
+						await interaction.followUp({content: 'Le bot a maintenant un statut personnalisé : ' + activityName, ephemeral: true });
 					}
 					await interaction.client.user.setActivity(activityName, { type: ActivityType.Custom });
 					break;
 				default:
-					await interaction.reply('Vous devez spécifier un type d\'activité valide.', { ephemeral: true });
+					await interaction.reply({content: 'Vous devez spécifier un type d\'activité valide.', ephemeral: true });
 					break;
 			}
 		}
@@ -122,19 +122,19 @@ module.exports = {
 			if (activityType === 'None') {
 				await interaction.client.user.setActivity(null);
 				if (!reply) {
-					await interaction.reply('Le bot n\'a plus d\'activité.', { ephemeral: true });
+					await interaction.reply({content: 'Le bot n\'a plus d\'activité.', ephemeral: true });
 				} else {
-					await interaction.followUp('Le bot n\'a plus d\'activité.', { ephemeral: true });
+					await interaction.followUp({content: 'Le bot n\'a plus d\'activité.', ephemeral: true });
 				}
 			} else {
-				await interaction.reply('Vous devez spécifier un nom d\'activité.', { ephemeral: true });
+				await interaction.reply({content: 'Vous devez spécifier un nom d\'activité.', ephemeral: true });
 			}
 		}
 		if (!activityType && activityName) {
-			await interaction.reply('Vous devez spécifier un type d\'activité.', { ephemeral: true });
+			await interaction.reply({content: 'Vous devez spécifier un type d\'activité.', ephemeral: true });
 		}
 		if (!activityType && !activityName && !status) {
-			await interaction.reply('Vous devez spécifier un état ou une activité.', { ephemeral: true });
+			await interaction.reply({content: 'Vous devez spécifier un état ou une activité.', ephemeral: true });
 		}
 	},
 };

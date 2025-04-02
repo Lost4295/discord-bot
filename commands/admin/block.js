@@ -26,11 +26,11 @@ module.exports = {
                                 throw error;
                             }
                         } else {
-                            await interaction.reply(target.username + ' a été bloqué avec succès.');
+                            await interaction.reply({content:target.username + ' a été bloqué avec succès.'});
                         }
                     });
                 } else {
-                    await interaction.reply(target.username + ' est déjà bloqué.');
+                    await interaction.reply({content: target.username + ' est déjà bloqué.'});
                 }
             });
             pool.releaseConnection(connection);

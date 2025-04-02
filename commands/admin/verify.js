@@ -4,19 +4,19 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('verify')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
-		.setDescription('DEV // Donne')
+		.setDescription('Permet d\'envoyer un message à chaque membre pour vérifier leurs informations.')
 		.setDMPermission(false),
 	async execute(interaction) {
 		const pool = require("../../db.js");
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
 			let errors = [];
-			connection.query('SELECT * from users order by points DESC', async function (error, resultats) {
+			connection.query('SELECT * from users order by points_s2 DESC', async function (error, resultats) {
 				if (error) throw error;
 				for (let eleve of resultats) {
 					console.log(eleve);
 					try {
-						let message = 'Bonjour ! Simplement pour vérifier, tu es bien en :\n - ';
+						let message = 'Bonjour ! Un nouveau message de ma part, pour te donner tes points et vérfier quelques petites infos ! Alors, tu as '+eleve.points_s2+' points.\nEt, tu es bien en :\n - ';
 						const niveau = eleve.classe[0];
 						switch (niveau) {
 							case '5':
@@ -94,7 +94,7 @@ module.exports = {
 								break;
 						}
 						message += '\n - ';
-						const groupe = eleve.classe[eleve.classe.length - 1];
+						const groupe = /^-?\d+$/.test(eleve.classe[eleve.classe.length - 1]) ? eleve.classe[eleve.classe.length - 1] : "... Je sais pas, il faudra que tu le renseignes ";
 						message += 'dans le groupe ' + groupe + '. C\'est bien ça ? \n\n Si ce n\'est pas le cas (et même si ça l\'est), envoie un';
 						message += ' message à <@375710602364190731> pour qu\'il puisse faire les modifications nécessaires. Merci !';
 						message += '\n\nIl faut bien que tu lui envoies ta classe, ta filière et ton groupe, sous la forme suivante : 2A5, 5RVJV1, etc.';
@@ -106,7 +106,7 @@ module.exports = {
 						console.log(message);
 						let user = await guild.members.fetch(eleve.user_id);
 						console.log(user);
-						await user.send(message);
+						await user.send({content: message});
 					} catch (error) {
 						console.error(error);
 						console.error('Could not send message to ' + eleve.pseudo);
@@ -119,7 +119,7 @@ module.exports = {
 					return error[0] + " (" + error[1] + ")";
 				}).join(", ");
 
-				await interaction.editReply("Messages envoyés !! Mais pas à eux: " + errmess);
+				await interaction.editReply({content: "Messages envoyés !! Mais pas à eux: " + errmess});
 
 			})
 			pool.releaseConnection(connection);

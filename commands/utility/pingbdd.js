@@ -12,14 +12,14 @@ module.exports = {
 		pool.getConnection(function (err, connection) {
 			if (err) {
 				console.log(err);
-				interaction.reply('La base de données ne fonctionne pas.');
+				interaction.reply({content:'La base de données ne fonctionne pas.'});
 				pool.releaseConnection(connection);
 				return;
 			}
 		connection.query('SELECT 1 as ok', async function (error, results) {
 			if (error) throw error;
 			console.log(results);
-			await interaction.reply('La base de données fonctionne correctement.');
+			await interaction.reply({content:'La base de données fonctionne correctement.'});
 		});
         pool.releaseConnection(connection);
 	});

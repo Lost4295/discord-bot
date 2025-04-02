@@ -16,26 +16,26 @@ module.exports = {
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
 			if (interaction.channel.id != '772516231952990208') {
-				await interaction.editReply('Cette commande ne peut être utilisée que dans le channel <#772516231952990208>.');
+				await interaction.editReply({content:'Cette commande ne peut être utilisée que dans le channel <#772516231952990208>.'});
 				return;
 			}
 			connection.query("SELECT * FROM dates WHERE NOW() BETWEEN date AND DATE_ADD(date, INTERVAL 8 HOUR) AND distanciel = 1 ORDER BY date ASC LIMIT 1; ", async function (error, results) {
 				if (error) throw error;
 				if (results.length == 0) {
-					await interaction.editReply('Aucun événement en distanciel n\'est prévu pour le moment.');
+					await interaction.editReply({content:'Aucun événement en distanciel n\'est prévu pour le moment.'});
 				} else {
 					connection.query('SELECT * FROM users where user_id = ' + interaction.user.id, async function (error, isInBDD) {
 						if (error) throw error;
 						console.log(isInBDD);
 						if (isInBDD.length == 0) {
-							await interaction.editReply('Vous n\'êtes pas inscrit dans la base de données de Couch Bot.');
+							await interaction.editReply({content:'Vous n\'êtes pas inscrit dans la base de données de Couch Bot.'});
 							return;
 						}
 						connection.query('SELECT * FROM participations where user_id = ? AND date_id = ?', [interaction.user.id, results[0].id], async function (error, isAlreadyPresent) {
 							if (error) throw error;
 							console.log(isAlreadyPresent);
 							if (isAlreadyPresent.length != 0) {
-								await interaction.editReply('Vous avez déjà notifié votre présence.');
+								await interaction.editReply({content:'Vous avez déjà notifié votre présence.'});
 								return;
 							}
 							if (img != null) {
@@ -51,7 +51,7 @@ module.exports = {
 							connection.query('INSERT INTO participations (user_id, date_id) VALUES (?, ?)', [interaction.user.id, results[0].id], async function (error, results) {
 								if (error) throw error;
 								console.log(results);
-								await interaction.channel.send(`<@${interaction.user.id}>, votre participation a bien été enregistrée.`);
+								await interaction.channel.send({content:`<@${interaction.user.id}>, votre participation a bien été enregistrée.`});
 							});
 							connection.query('SELECT * FROM questions where valid = 1 ORDER BY RAND() LIMIT 1', async function (error, results) {
 								if (error) throw error;

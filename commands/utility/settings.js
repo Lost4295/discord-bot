@@ -77,7 +77,7 @@ module.exports = {
 			await interaction.deferReply();
 			connection.query('SELECT * FROM users WHERE user_id =' + interaction.user.id, async function (error) {
 				if (error) {
-					await interaction.reply('Vous n\'êtes pas inscrit dans la base de données de Couch Bot.');
+					await interaction.reply({content:'Vous n\'êtes pas inscrit dans la base de données de Couch Bot.', ephemeral: true});
 					return;
 				}
 				if (interaction.options.getSubcommandGroup() === 'visibility') {
@@ -92,7 +92,7 @@ module.exports = {
 							console.log(results);
 						});
 					}
-					await interaction.editReply('Votre statut a bien été modifié.');
+					await interaction.editReply({content:'Votre statut a bien été modifié.', ephemeral: true});
 				}
 				if (interaction.options.getSubcommandGroup() === 'pseudo') {
 					if (interaction.options.getSubcommand() === 'set') {
@@ -100,7 +100,7 @@ module.exports = {
 						connection.query('UPDATE users SET pseudo = ? WHERE user_id = ?', [pseudo, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.editReply('Votre pseudo a bien été modifié.');
+							await interaction.editReply({content:'Votre pseudo a bien été modifié.', ephemeral: true});
 						});
 					}
 				}
@@ -110,7 +110,7 @@ module.exports = {
 						connection.query('UPDATE users SET prenom = ? WHERE user_id = ?', [prenom, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.editReply('Votre prénom a bien été modifié.');
+							await interaction.editReply({content:'Votre prénom a bien été modifié.', ephemeral: true});
 						});
 					}
 				}
@@ -120,7 +120,7 @@ module.exports = {
 						connection.query('UPDATE users SET nom = ? WHERE user_id = ?', [nom, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.editReply('Votre nom a bien été modifié.');
+							await interaction.editReply({content:'Votre nom a bien été modifié.', ephemeral: true});
 						});
 					}
 				}
@@ -130,7 +130,7 @@ module.exports = {
 						connection.query('UPDATE users SET classe = ? WHERE user_id = ?', [classe, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.editReply('Votre classe a bien été modifiée.');
+							await interaction.editReply({content:'Votre classe a bien été modifiée.', ephemeral: true});
 						});
 					}
 				}

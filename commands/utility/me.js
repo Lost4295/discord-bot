@@ -32,7 +32,7 @@ module.exports = {
 				if (error) throw error;
 				console.log(results);
 				if (results.length == 0) {
-					await interaction.editReply('Vous n\'êtes pas inscrit dans la base de données de Couch Bot. ');
+					await interaction.editReply({content:'Vous n\'êtes pas inscrit dans la base de données de Couch Bot. '});
 				} else {
 					exampleEmbed.addFields(
 						// { name: 'Regular field title', value: 'Some value here' },
@@ -40,7 +40,10 @@ module.exports = {
 						{ name: 'Pseudo', value: results[0].pseudo },
 						{ name: 'Nom', value: results[0].nom },
 						{ name: 'Prénom', value: results[0].prenom },
-						{ name: 'Classe', value: results[0].classe }
+						{ name: 'Classe', value: results[0].classe },
+						{ name: 'Points du semestre 1', value: results[0].points + ' points' },
+						{ name: 'Points du semestre 2', value: results[0].points_s2 + ' points' },
+						{ name: 'Points de Quizz', value: results[0].quizzpoints + ' points' },
 					)
 					await interaction.editReply({ embeds: [exampleEmbed] });
 					// await interaction.reply('Bonjour ' + results[0].nom + ' ' + results[0].prenom);

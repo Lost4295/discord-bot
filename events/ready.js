@@ -13,14 +13,14 @@ module.exports = {
 			// This runs every day at 10:30:00, you can do anything you want
 			// Specifing your guild (server) and your channel
 			// const channel = client.channels.cache.get('1262692453358501919');
-			// channel.send('You message');
+			// channel.send('Your message');
 			pool.getConnection(function (err, connection) {
 				connection.query('SELECT * from dates WHERE DATE(date) = DATE(DATE_ADD(NOW(), INTERVAL 1 DAY));', async function (error, results) {
 					if (error) throw error;
 					console.log(results);
 					if (results.length > 0) {
 						const channel = client.channels.cache.get('510741954083160066');
-						await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à demain ! @here")
+						await channel.send({content:"Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à demain ! @here"})
 					}
 					await t.send("Vérifié dates demain");
 				});
@@ -29,9 +29,9 @@ module.exports = {
 					console.log(results);
 					if (results.length > 0) {
 						const channel = client.channels.cache.get('510741954083160066');
-						await channel.send("Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à dans deux jours ! @here")
+						await channel.send({content:"Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à dans deux jours ! @here"})
 					}
-					await t.send("Vérifié dates dans deux jours");
+					await t.send({content:"Vérifié dates dans deux jours"});
 				});
 				connection.query('SELECT * from dates WHERE DATE(date) = DATE(NOW()) and distanciel =1', async function (error, results) {
 					if (error) throw error;
@@ -56,9 +56,9 @@ module.exports = {
 							}
 						]
 						);
-						await t.send("ouvert salon");
+						await t.send({content:"ouvert salon"});
 					}
-					await t.send("Vérifié dates aujourd'hui");
+					await t.send({content:"Vérifié dates aujourd'hui"});
 				});
 				pool.releaseConnection(connection);
 			});
@@ -89,7 +89,7 @@ module.exports = {
 							}
 						]
 						);
-						await t.send("fermé salon");
+						await t.send({content:"fermé salon"});
 					}
 				});
 				pool.releaseConnection(connection);
@@ -97,7 +97,6 @@ module.exports = {
 		});
 		scheduledMessage.start();
 		scheduledMessage2.start();
-		// scheduledMessageTest.start();
-	}
+		}
 };
 // When you want to start it, use:

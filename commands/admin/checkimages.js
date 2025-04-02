@@ -72,8 +72,9 @@ module.exports = {
 							const row = new ActionRowBuilder().addComponents(refuser, accepter);
 							const response = await interaction.editReply({ embeds: [em], components: [row] });
 							const collectorFilter = i => i.user.id === interaction.user.id;
-							const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000,max:1 });
+							const confirmation = await response.awaitMessageComponent({ filter: collectorFilter, time: 60_000, max:1 });
 							try {
+								row.components.forEach(button => button.setDisabled(true))
 								if (confirmation.customId === 'accepter') {
 									connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 1, results[0].id], async function (error) {
 										if (error) throw error;
@@ -83,19 +84,19 @@ module.exports = {
 										connection.query('INSERT INTO points_s2 (user_id, points, reason) VALUES (?, ?, ?)', [results[0].user_id, 0.25, "Image acceptée"], async function (error) {
 											if (error) throw error;
 										});
-										await confirmation.update('L\'image a bien été validée.');
+										await confirmation.update({content: 'L\'image a bien été validée.', components: []});
 										connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, resultsa) {
 											if (error) throw error;
 											console.log(resultsa);
 											if (resultsa.length > 0) {
 												const channel = interaction.client.channels.cache.get(resultsa[0].value);
 												if (channel) {
-													await channel.send('<@' + results[0].user_id + '>, votre image a été validée. Vous avez gagné 0.25 points !');
+													await channel.send({content: '<@' + results[0].user_id + '>, votre image a été validée. Vous avez gagné 0.25 points !'});
 												} else {
-													await interaction.followUp('Votre image a été validée. Vous avez gagné 0.25 points !');
+													await interaction.followUp({content: 'Votre image a été validée. Vous avez gagné 0.25 points !'});
 												}
 											} else {
-												await interaction.editReply('Votre image a été validée. Vous avez gagné 0.25 points !');
+												await interaction.editReply({content: 'Votre image a été validée. Vous avez gagné 0.25 points !'});
 											}
 										})
 									});
@@ -104,7 +105,7 @@ module.exports = {
 									connection.query('SELECT * FROM images WHERE verified = 0 AND id =' + results[0].id, async function (error, results) {
 										if (error) throw error;
 										if (results.length == 0) {
-											await interaction.editReply('Cette image n\'existe pas.');
+											await interaction.editReply({content: 'Cette image n\'existe pas.'});
 										} else {
 											connection.query('UPDATE images SET verified = ?, ok = ? WHERE id = ?', [1, 0, id], async function (error, resultse) {
 												if (error) throw error;
@@ -113,9 +114,9 @@ module.exports = {
 													if (error) throw error;
 													console.log(resultsa);
 													if (resultsa.length > 0) {
-														await interaction.client.channels.cache.get(resultsa[0].value).send('<@' + results[0].user_id + '>, votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point.  ');
+														await interaction.client.channels.cache.get(resultsa[0].value).send({content:'<@' + results[0].user_id + '>, votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point.  '});
 													} else {
-														await interaction.editReply('Votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point. ');
+														await interaction.editReply({content:'Votre image n\'a pas été validée. Vous n\'avez donc pas gagné de point. '});
 													}
 												})
 											});

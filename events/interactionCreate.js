@@ -3,7 +3,6 @@ const { Events, Collection } = require('discord.js');
 module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
-		// var n = 0;
 		if (interaction.channel.id === '1283837518848196721' || interaction.channel.id === "772516231952990208" || interaction.member.roles.cache.some(role => role.name === 'Admin')) {
 			const pool = require("../db.js");
 			pool.getConnection(async function (error, connection) {

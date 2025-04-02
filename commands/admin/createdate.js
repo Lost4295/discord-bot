@@ -74,7 +74,7 @@ module.exports = {
 		pool.getConnection(function (err, connection) {
 			if (err) {
 				console.log(err);
-				interaction.reply('La base de données ne fonctionne pas.');
+				interaction.reply({content:'La base de données ne fonctionne pas.'});
 				pool.releaseConnection(connection);
 				return;
 			}

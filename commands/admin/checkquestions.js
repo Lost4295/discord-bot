@@ -52,9 +52,9 @@ module.exports = {
 						if (error) throw error;
 						console.log(results);
 						if (results.length == 0) {
-							await interaction.reply('Cette question potentielle n\'existe pas.');
+							await interaction.reply({content: 'Cette question potentielle n\'existe pas.'});
 						} else if (results[0].verified == 1) {
-							await interaction.reply('Cette question a déjà été vérifiée.');
+							await interaction.reply({content:'Cette question a déjà été vérifiée.'});
 						} else {
 							const refuser = new ButtonBuilder()
 								.setCustomId('refuser')
@@ -90,8 +90,8 @@ module.exports = {
 											if (error) throw error;
 											console.log(hehe);
 											if (hehe.length > 0) {
-												await interaction.client.channels.cache.get(hehe[0].value).send('<@' + results[0].user_id + '>, votre question a été validée. Vous avez gagné 0.2 points !');
-												await interaction.reply('La réponse a été envoyée dans le salon correspondant.')
+												await interaction.client.channels.cache.get(hehe[0].value).send({content:'<@' + results[0].user_id + '>, votre question a été validée. Vous avez gagné 0.2 points !'});
+												await interaction.reply({content: "La réponse a été envoyée dans le salon correspondant."});
 											} else {
 												await interaction.reply('Votre question a été validée. Vous avez gagné 0.2 points !');
 											}
@@ -102,7 +102,7 @@ module.exports = {
 										if (error) throw error;
 										console.log(results);
 										if (results.length == 0) {
-											await interaction.reply('Cette question potentielle n\'existe pas.');
+											await interaction.reply({content:'Cette question potentielle n\'existe pas.'});
 										} else {
 											connection.query('UPDATE questions SET verified = ?, valid = ? WHERE user_id = ? AND id = ?', [true, 0, results[0].user_id, results[0].id], async function (error, era) {
 												if (error) throw error;
@@ -115,10 +115,10 @@ module.exports = {
 													if (error) throw error;
 													console.log(result);
 													if (result.length > 0) {
-														await interaction.client.channels.cache.get(result[0].value).send('<@' + results[0].user_id + '>, votre question n\'a pas été validée. Vous n\'avez donc pas gagné de point.  ');
-														await interaction.reply('La réponse a été envoyée dans le salon correspondant.')
+														await interaction.client.channels.cache.get(result[0].value).send({content:'<@' + results[0].user_id + '>, votre question n\'a pas été validée. Vous n\'avez donc pas gagné de point.  '});
+														await interaction.reply({content:'La réponse a été envoyée dans le salon correspondant.'})
 													} else {
-														await interaction.reply('Votre question n\'a pas été validée. Vous n\'avez donc pas gagné de point. ');
+														await interaction.reply({content:'Votre question n\'a pas été validée. Vous n\'avez donc pas gagné de point. '});
 													}
 												})
 											});

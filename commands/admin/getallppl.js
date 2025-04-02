@@ -2,7 +2,7 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('people')
+        .setName('getpeople')
         .setDescription('Donne la liste des personnes inscrites.')
         .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
         .setDMPermission(false),
@@ -19,11 +19,11 @@ module.exports = {
                 }
                 if (str.length > 2000) {
                     while (str.length > 0) {
-                        await interaction.channel.send(str.slice(0, 2000));
+                        await interaction.channel.send({content:str.slice(0, 2000)});
                         str = str.slice(2000);
                     }
                 } else {
-                    await interaction.reply(str);
+                    await interaction.reply({content:str});
 
                 }
             });
