@@ -22,7 +22,7 @@ module.exports = {
 						const channel = client.channels.cache.get('510741954083160066');
 						await channel.send({content:"Une séance se prépare ! Elle sera " + (results[0].distanciel ? "en distanciel" : "en présentiel") + "! Allez, à demain ! @here"})
 					}
-					await t.send("Vérifié dates demain");
+					await t.send({content:"Vérifié dates demain"});
 				});
 				connection.query('SELECT * from dates WHERE DATE(date) = DATE(DATE_ADD(NOW(), INTERVAL 2 DAY));', async function (error, results) {
 					if (error) throw error;

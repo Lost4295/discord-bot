@@ -10,8 +10,13 @@ module.exports = {
                 .setName('message')
                 .setDescription('Le message à répéter.')
                 .setRequired(true))
-        .setDMPermission(false),
+        ,
     async execute(interaction) {
+        if (interaction.options.getString('message').length > 2000) {
+            await interaction.user.send({content:"Le message est trop long !"});
+            return;
+        }
+        await interaction.reply('Pong!');
         await interaction.deleteReply();
         await interaction.channel.send({content:interaction.options.getString('message')});
     }

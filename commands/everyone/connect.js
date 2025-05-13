@@ -88,7 +88,7 @@ module.exports = {
 										r = 0;
 									}
 									if (r == results[0].answer) {
-										await interaction.editReply({ content: 'Bonne réponse !' });
+										await interaction.editReply({ content: 'Bonne réponse !', components: [] });
 										await interaction.followUp({ content: '<@' + target.id + '>, tu as gagné 0.25 points !' });
 										connection.query("UPDATE users SET points_s2 = points_s2 + 0.25 where user_id = " + target.id, async function (error) {
 											if (error) throw error;
