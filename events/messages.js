@@ -16,5 +16,8 @@ module.exports = {
             });
             console.log(`Created thread: ${thread.name}`);
         }
+
+        if (channel.id === '1351545105437429802' && test){}
+
     },
 };

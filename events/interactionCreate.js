@@ -14,7 +14,7 @@ module.exports = {
 						interaction.client.channels.cache.get(interaction.channel.id).send("La connexion à la base de données a été refusée. Veuillez contacter un administrateur.");
 					}
 				}
-				if (interaction.channel.id ==='772516231952990208' && interaction.commandName !== 'connect' && !interaction.member.roles.cache.some(role => role.name === 'Admin')) {
+				if (interaction.channel.id ==='772516231952990208' && interaction.commandName !== 'connect' && interaction.commandName !== "emergencyconnect" && !interaction.member.roles.cache.some(role => role.name === 'Admin')) {
 					await interaction.reply({ content: 'Vous n\'avez pas la permission d\'utiliser cette commande ici.', ephemeral: true });
 					return;
 				}
@@ -88,6 +88,10 @@ module.exports = {
 					try {
 						console.log(
 							`/${interaction.commandName} — Par ${interaction.user.username}`)
+							// if (interaction.commandName !== "emergencyconnect"){
+							// 	await interaction.reply({ content: 'Le bot a un problème ! Vous ne pouvez pas utiliser cette commande pour le moment. ', ephemeral: true });
+							// 	return;
+							// }
 						connection.query('SELECT user_id FROM blocked_users', async function (error, results) {
 							if (error) throw error;
 							for (let result of results) {
