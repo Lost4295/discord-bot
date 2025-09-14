@@ -2,8 +2,8 @@ const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('disc
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('getpts')
-		.setDescription('Pour voir les points obtenus.')
+		.setName('getpts2024')
+		.setDescription('Pour voir les points obtenus en 2024')
 		.addStringOption(option => option.setName('semestre').setDescription("Quel Semestre vous aimeriez voir.").setChoices(
 			{ value: "1", name: "Semestre 1" },
 			{ value: "2", name: "Semestre 2" },
@@ -24,9 +24,9 @@ module.exports = {
 			let query;
 			console.log(semestre);
 			if (semestre == "1") {
-				query = 'SELECT pseudo, points, visibility, is_admin FROM users where user_id =';
+				query = 'SELECT pseudo, points, visibility, is_admin FROM old_users where user_id =';
 			} else if (semestre == "2") {
-				query = 'SELECT pseudo, points_s2, visibility, is_admin FROM users where user_id =';
+				query = 'SELECT pseudo, points_s2, visibility, is_admin FROM old_users where user_id =';
 			}
 			connection.query(query + user.id, async function (error, results) {
 				if (error) throw error;
@@ -60,9 +60,9 @@ module.exports = {
 					exampleEmbed.setDescription(desc);
 					let query2;
 					if (semestre == "1") {
-						query2 = 'SELECT * FROM points where user_id = '
+						query2 = 'SELECT * FROM points_2024 where user_id = '
 					} else if (semestre == "2") {
-						query2 = 'SELECT * FROM points_s2 where user_id = '
+						query2 = 'SELECT * FROM points_s2_2024 where user_id = '
 					}
 					connection.query(query2 + user.id, async function (error, results) {
 						if (error) throw error;
