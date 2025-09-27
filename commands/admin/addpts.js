@@ -35,14 +35,14 @@ module.exports = {
 
             const pool = require("../../db.js");
             pool.getConnection(function (err, connection) {
-                connection.query('SELECT * FROM users where user_id = ' + target.id, async function (error, results) {
+                connection.query('SELECT * FROM users where discord_id = ' + target.id, async function (error, results) {
                     if (error) throw error;
                     console.log(results);
                     if (results[0] == null) {
                         await interaction.followUp({content: target.username + ' n\'est pas inscrit dans la base de données de Couch Bot. '});
                         return;
                     }
-                    connection.query('INSERT INTO points (user_id, points, reason) VALUES (?,?,?)', [target.id, pts, reason], async function (error) {
+                    connection.query('INSERT INTO points (discord_id, points, reason) VALUES (?,?,?)', [target.id, pts, reason], async function (error) {
                         if (error) throw error;
                         await interaction.followUp({content:'Points ajoutés avec succès'});
                     })

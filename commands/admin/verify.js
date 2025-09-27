@@ -11,12 +11,12 @@ module.exports = {
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
 			let errors = [];
-			connection.query('SELECT * from users order by points_s2 DESC', async function (error, resultats) {
+			connection.query('SELECT * from users order by points DESC', async function (error, resultats) {
 				if (error) throw error;
 				for (let eleve of resultats) {
 					console.log(eleve);
 					try {
-						let message = 'Bonjour ! Un nouveau message de ma part, pour te donner tes points et vérfier quelques petites infos ! Alors, tu as '+eleve.points_s2+' points.\nEt, tu es bien en :\n - ';
+						let message = 'Bonjour ! Un nouveau message de ma part, pour te donner tes points et vérfier quelques petites infos ! Alors, tu as '+eleve.points+' points.\nEt, tu es bien en :\n - ';
 						const niveau = eleve.classe[0];
 						switch (niveau) {
 							case '5':

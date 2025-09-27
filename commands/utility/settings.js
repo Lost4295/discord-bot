@@ -75,7 +75,7 @@ module.exports = {
 		const pool = require("../../db.js");
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
-			connection.query('SELECT * FROM users WHERE user_id =' + interaction.user.id, async function (error) {
+			connection.query('SELECT * FROM users where discord_id =' + interaction.user.id, async function (error) {
 				if (error) {
 					await interaction.reply({content:'Vous n\'êtes pas inscrit dans la base de données de Couch Bot.', ephemeral: true});
 					return;

@@ -17,7 +17,7 @@ module.exports = {
 
 			const member = interaction.guild.members.cache.get(interaction.user.id);
 			await interaction.deferReply();
-			connection.query('SELECT quizzpoints FROM users where user_id = ' + user.id, async function (error, results) {
+			connection.query('SELECT quizzpoints FROM users where discord_id = ' + user.id, async function (error, results) {
 				if (error) throw error;
 				console.log(results);
 				if (results.length == 0) {

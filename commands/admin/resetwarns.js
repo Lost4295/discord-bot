@@ -16,7 +16,7 @@ module.exports = {
         const pool = require("../../db.js");
         pool.getConnection(async function (err, connection) {
             await interaction.deferReply();
-            connection.query('SELECT warns FROM users where user_id = ?', [cible.id], async function (error, results) {
+            connection.query('SELECT warns FROM users where discord_id = ?', [cible.id], async function (error, results) {
                 if (error) throw error;
                 console.log(results);
                 if (results) {

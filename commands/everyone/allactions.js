@@ -19,7 +19,7 @@ module.exports = {
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
 			if (quizz) {
-				connection.query('SELECT pseudo, quizzpoints FROM users where user_id = ' + user.id, async function (error, results) {
+				connection.query('SELECT pseudo, quizzpoints FROM users where discord_id = ' + user.id, async function (error, results) {
 					if (error) throw error;
 					console.log(results);
 					let member = interaction.guild.members.cache.get(interaction.user.id);
@@ -54,9 +54,9 @@ module.exports = {
 				let query;
 				let ss2 = false;
 				if (semestre =="1"){
-					query = 'SELECT pseudo, points FROM users where user_id = '
+					query = 'SELECT pseudo, points FROM users where discord_id = '
 				} else if (semestre =="2"){
-					query = 'SELECT pseudo, points_s2 FROM users where user_id = '
+					query = 'SELECT pseudo, points FROM users where discord_id = '
 					ss2 = true;
 				}
 				connection.query(query + user.id, async function (error, results) {
@@ -71,8 +71,8 @@ module.exports = {
 						let points;
 						let query2;
 						if (ss2){	
-							points = results[0].points_s2
-							query2 ='SELECT * FROM points_s2 where user_id = '
+							points = results[0].points
+							query2 ='SELECT * FROM points where user_id = '
 						} else {
 							points = results[0].points
 							query2 ='SELECT * FROM points where user_id = '

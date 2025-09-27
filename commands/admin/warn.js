@@ -26,7 +26,7 @@ module.exports = {
             connection.query('UPDATE USERS SET warns = warns + 1 WHERE user_id = ?', [cible.id, cible.id], async function (error) {
                 if (error) throw error;
                 connection.query(
-                    'SELECT warns FROM users where user_id = ?',
+                    'SELECT warns FROM users where discord_id = ?',
                     [cible.id],
                     async function (error, results) {
                         if (error) throw error;

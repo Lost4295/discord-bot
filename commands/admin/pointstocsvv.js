@@ -20,8 +20,8 @@ module.exports = {
             let csv;
             if (classe === undefined || classe === null || classe === '') {
                 connection.query(`SELECT nom, prenom, classe,
-                    ROUND(if (points_s2 >=8 and is_admin=2, 8,(if(points_s2>=6 and is_admin=1,6,
-                    if (points_s2>=4 and is_admin=0,4,points_s2)))),2) as points_s2  from users`, async function (error, results) {
+                    ROUND(if (points  >=8 and is_admin=2, 8,(if(points >=6 and is_admin=1,6,
+                    if (points >=4 and is_admin=0,4,points )))),2) as points   from users`, async function (error, results) {
                     if (error) throw error;
                     csv = convertToCSV(results);
                     fs.writeFile('points.csv', Buffer.from(csv), async function (err) {
@@ -38,8 +38,8 @@ module.exports = {
                 const ca = classe.split(',');
                 const promises = ca.map(cl => {
                     return new Promise((resolve, reject) => {
-                        connection.query(`SELECT nom, prenom, classe, ROUND(if (points_s2 >=8 and is_admin=2, 8,(if(points_s2>=6 and is_admin=1,6,
-                            if (points_s2>=4 and is_admin=0,4,points_s2)))),2) as points from users WHERE classe LIKE ?`, [cl.trim() + "%"], function (error, results) {
+                        connection.query(`SELECT nom, prenom, classe, ROUND(if (points  >=8 and is_admin=2, 8,(if(points >=6 and is_admin=1,6,
+                            if (points >=4 and is_admin=0,4,points )))),2) as points from users WHERE classe LIKE ?`, [cl.trim() + "%"], function (error, results) {
                             if (error) { reject(); throw error; }
                             resolve(results);
                         })
@@ -65,8 +65,8 @@ module.exports = {
                 });
             } else {
                 connection.query(`SELECT nom, prenom, classe, 
-                    ROUND(if (points_s2 >=8 and is_admin=2, 8,(if(points_s2>=6 and is_admin=1,6,
-                    if (points_s2>=4 and is_admin=0,4,points_s2)))),2) as points  from users WHERE classe LIKE ?`,
+                    ROUND(if (points  >=8 and is_admin=2, 8,(if(points >=6 and is_admin=1,6,
+                    if (points >=4 and is_admin=0,4,points )))),2) as points  from users WHERE classe LIKE ?`,
                     [classe + "%"], async function (error, results) {
                         if (error) throw error;
                         console.log(results);

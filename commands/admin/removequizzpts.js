@@ -21,7 +21,7 @@ module.exports = {
         const pts = interaction.options.getString('pts') ?? 0;
         const pool = require("../../db.js");
         pool.getConnection(async function (err, connection) {
-            connection.query('SELECT * FROM users where user_id = ' + target.id, async function (error, results) {
+            connection.query('SELECT * FROM users where discord_id = ' + target.id, async function (error, results) {
                 if (error) throw error;
                 console.log(results);
                 if (results[0] == null) {

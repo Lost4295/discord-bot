@@ -31,7 +31,7 @@ module.exports = {
 						const classe = interaction.fields.getTextInputValue('classe')
 						console.log({ firstname, lastname, classe });
 						connection.query(
-							'INSERT INTO users (pseudo, user_id, prenom, nom, classe, date_inscr) VALUES (?, ?, ?, ?, ?, NOW())',
+							'INSERT INTO users (pseudo, discord_id, prenom, nom, classe, date_inscr) VALUES (?, ?, ?, ?, ?, NOW())',
 							[interaction.user.username, interaction.user.id, firstname, lastname, classe],
 							async function (error) {
 								if (error) {

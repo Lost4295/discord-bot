@@ -43,8 +43,8 @@ module.exports = {
 				query = 'SELECT * from users WHERE visibility=1 ORDER BY points DESC';
 				query2 = 'SELECT * from users ORDER BY points DESC';
 			} else if (semestre == "2") {
-				query = 'SELECT * from users WHERE visibility=1 ORDER BY points_s2 DESC';
-				query2 = 'SELECT * from users ORDER BY points_s2 DESC';
+				query = 'SELECT * from users WHERE visibility=1 ORDER BY points DESC';
+				query2 = 'SELECT * from users ORDER BY points DESC';
 				ss2 = true;
 			}
 
@@ -62,7 +62,7 @@ module.exports = {
 						if (quizz){
 							points = resultats[i].quizzpoints;
 						} else if (ss2){
-							points = resultats[i].points_s2;
+							points = resultats[i].points;
 						} else {
 							points =resultats[i].points;
 						}
@@ -92,7 +92,7 @@ module.exports = {
 						if (quizz){
 							points = resultats[i].quizzpoints;
 						} else if (ss2){
-							points = resultats[i].points_s2;
+							points = resultats[i].points;
 						} else {
 							points =resultats[i].points;
 						}
@@ -101,7 +101,7 @@ module.exports = {
 					embed.addFields(
 						{ name: '\u200B', value: '\u200B' },
 					);
-					connection.query('SELECT * from users WHERE user_id = ' + interaction.user.id, async function (error, results) {
+					connection.query('SELECT * from users where discord_id = ' + interaction.user.id, async function (error, results) {
 						if (error) throw error;
 						connection.query(query2, async function (error, aa) {
 							if (error) throw error;
@@ -119,7 +119,7 @@ module.exports = {
 								if (quizz){
 									points = results[0].quizzpoints;
 								} else if (ss2){
-									points = results[0].points_s2;
+									points = results[0].points;
 								} else {
 									points =results[0].points;
 								}
