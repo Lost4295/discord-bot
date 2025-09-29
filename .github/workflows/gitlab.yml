@@ -21,4 +21,4 @@ jobs:
                   git config user.name "Lost4295"
                   git config user.email "yturinkondi@myges.fr"
                   git remote set-url origin "https://oauth2:${token}@gitlab.bonnard.io/KaiYou/discord-bot.git"
-                  git push origin master
+                  git push origin main
