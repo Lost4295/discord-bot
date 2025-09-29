@@ -31,10 +31,10 @@ module.exports = {
 						const classe = interaction.fields.getTextInputValue('classe')
 						console.log({ firstname, lastname, classe });
 						connection.query(
-							'INSERT INTO users (pseudo, discord_id, prenom, nom, classe, date_inscr) VALUES (?, ?, ?, ?, ?, NOW())',
+							'INSERT INTO users (pseudo, id, prenom, nom, classe, date_inscr) VALUES (?, ?, ?, ?, ?, NOW())',
 							[interaction.user.username, interaction.user.id, firstname, lastname, classe],
 							async function (error) {
-								if (error) {
+								if (error) { 
 									console.log(error);
 									if (error.code === 'ER_DUP_ENTRY') {
 										await interaction.reply({ content: 'Vous êtes déjà inscrit. Si vous voulez modifier vos informations, veuillez exécuter la commande /settings.', ephemeral: true });
