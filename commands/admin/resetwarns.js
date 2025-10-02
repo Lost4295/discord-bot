@@ -16,7 +16,7 @@ module.exports = {
         const pool = require("../../db.js");
         pool.getConnection(async function (err, connection) {
             await interaction.deferReply();
-            connection.query('SELECT warns FROM users where discord_id = ?', [cible.id], async function (error, results) {
+            connection.query('SELECT warns FROM users where id = ?', [cible.id], async function (error, results) {
                 if (error) throw error;
                 console.log(results);
                 if (results) {
@@ -24,7 +24,7 @@ module.exports = {
                         await interaction.followUp({content:`${cible.username} n'avait pas d'avertissements.`});
                     } else {
                         connection.query(
-                            'UPDATE USERS SET warns = 0 WHERE user_id = ?',
+                            'UPDATE USERS SET warns = 0 WHERE id = ?',
                             [cible.id],
                             async function (error) {
                                 if (error) throw error;

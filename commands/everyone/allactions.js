@@ -1,3 +1,4 @@
+//TODO : refaire
 const { SlashCommandBuilder, PermissionsBitField } = require('discord.js');
 
 module.exports = {
@@ -16,6 +17,9 @@ module.exports = {
 		const quizz = interaction.options.getBoolean('quizz') ?? false;
 		const semestre = interaction.options.getString('semestre') ?? "1";
 		let message = '';
+
+		await interaction.reply("Cette commande ne fonctionne pas pour l'instant, mais elle le sera très vite ! Demandez à <@349983254373466114> pour avoir la réponse à votre demande.");
+		return;
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
 			if (quizz) {

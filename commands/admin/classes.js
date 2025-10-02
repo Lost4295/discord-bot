@@ -20,7 +20,7 @@ module.exports = {
 				} else {
 					message += 'Élèves :\n';
 					for (let i = 0; i < len; i++) {
-						message += ` - ${resultats[i].nom} ${resultats[i].prenom} (${resultats[i].pseudo}) : ${resultats[i].classe}\n`;
+						message += ` - ${resultats[i].nom} ${resultats[i].prenom} (\`${resultats[i].pseudo}\`) : ${resultats[i].classe}\n`;
 					}
 				}
 				let messageLength = message.length;

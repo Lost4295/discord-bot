@@ -75,19 +75,19 @@ module.exports = {
 		const pool = require("../../db.js");
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
-			connection.query('SELECT * FROM users where discord_id =' + interaction.user.id, async function (error) {
+			connection.query('SELECT * FROM users where id =' + interaction.user.id, async function (error) {
 				if (error) {
 					await interaction.reply({content:'Vous n\'êtes pas inscrit dans la base de données de Couch Bot.', ephemeral: true});
 					return;
 				}
 				if (interaction.options.getSubcommandGroup() === 'visibility') {
 					if (interaction.options.getSubcommand() === 'off') {
-						connection.query('UPDATE users SET visibility = 0 WHERE user_id =' + interaction.user.id, async function (error, results) {
+						connection.query('UPDATE users SET visibility = 0 WHERE id =' + interaction.user.id, async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 						});
 					} else if (interaction.options.getSubcommand() === 'on') {
-						connection.query('UPDATE users SET visibility = 1 WHERE user_id =' + interaction.user.id, async function (error, results) {
+						connection.query('UPDATE users SET visibility = 1 WHERE id =' + interaction.user.id, async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 						});
@@ -97,7 +97,7 @@ module.exports = {
 				if (interaction.options.getSubcommandGroup() === 'pseudo') {
 					if (interaction.options.getSubcommand() === 'set') {
 						const pseudo = interaction.options.getString('pseudo');
-						connection.query('UPDATE users SET pseudo = ? WHERE user_id = ?', [pseudo, interaction.user.id], async function (error, results) {
+						connection.query('UPDATE users SET pseudo = ? WHERE id = ?', [pseudo, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 							await interaction.editReply({content:'Votre pseudo a bien été modifié.', ephemeral: true});
@@ -107,7 +107,7 @@ module.exports = {
 				if (interaction.options.getSubcommandGroup() === 'prénom') {
 					if (interaction.options.getSubcommand() === 'set') {
 						const prenom = interaction.options.getString('prénom');
-						connection.query('UPDATE users SET prenom = ? WHERE user_id = ?', [prenom, interaction.user.id], async function (error, results) {
+						connection.query('UPDATE users SET prenom = ? WHERE id = ?', [prenom, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 							await interaction.editReply({content:'Votre prénom a bien été modifié.', ephemeral: true});
@@ -117,7 +117,7 @@ module.exports = {
 				if (interaction.options.getSubcommandGroup() === 'nom') {
 					if (interaction.options.getSubcommand() === 'set') {
 						const nom = interaction.options.getString('nom');
-						connection.query('UPDATE users SET nom = ? WHERE user_id = ?', [nom, interaction.user.id], async function (error, results) {
+						connection.query('UPDATE users SET nom = ? WHERE id = ?', [nom, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 							await interaction.editReply({content:'Votre nom a bien été modifié.', ephemeral: true});
@@ -127,7 +127,7 @@ module.exports = {
 				if (interaction.options.getSubcommandGroup() === 'classe') {
 					if (interaction.options.getSubcommand() === 'set') {
 						const classe = interaction.options.getString('classe');
-						connection.query('UPDATE users SET classe = ? WHERE user_id = ?', [classe, interaction.user.id], async function (error, results) {
+						connection.query('UPDATE users SET classe = ? WHERE id = ?', [classe, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 							await interaction.editReply({content:'Votre classe a bien été modifiée.', ephemeral: true});

@@ -24,7 +24,7 @@ module.exports = {
 				if (results.length == 0) {
 					await interaction.editReply({content:'Aucun événement en distanciel n\'est prévu pour le moment.'});
 				} else {
-					connection.query('SELECT * FROM users where discord_id = ' + interaction.user.id, async function (error, isInBDD) {
+					connection.query('SELECT * FROM users where id = ' + interaction.user.id, async function (error, isInBDD) {
 						if (error) throw error;
 						console.log(isInBDD);
 						if (isInBDD.length == 0) {

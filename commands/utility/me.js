@@ -28,7 +28,7 @@ module.exports = {
 		// .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();
-			connection.query('SELECT * FROM users where discord_id = ' + interaction.user.id, async function (error, results) {
+			connection.query('SELECT * FROM users where id = ' + interaction.user.id, async function (error, results) {
 				if (error) throw error;
 				console.log(results);
 				if (results.length == 0) {
@@ -43,7 +43,6 @@ module.exports = {
 						{ name: 'Classe', value: results[0].classe },
 						//{ name: 'Points du semestre 1', value: results[0].points + ' points' },
 						//{ name: 'Points du semestre 2', value: results[0].points_s2 + ' points' },
-						{ name: 'Points de Quizz', value: results[0].quizzpoints + ' points' },
 					)
 					await interaction.editReply({ embeds: [exampleEmbed] });
 					// await interaction.reply('Bonjour ' + results[0].nom + ' ' + results[0].prenom);

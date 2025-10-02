@@ -1,16 +1,21 @@
+//TODO : refaire
+
 const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('getpts2024')
-		.setDescription('Pour voir les points obtenus en 2024')
-		.addStringOption(option => option.setName('semestre').setDescription("Quel Semestre vous aimeriez voir.").setChoices(
-			{ value: "1", name: "Semestre 1" },
-			{ value: "2", name: "Semestre 2" },
-		).setRequired(true))
+		.setName('getpts')
+		.setDescription('Pour voir les points obtenus')
+		// .addStringOption(option => option.setName('semestre').setDescription("Quel Semestre vous aimeriez voir.").setChoices(
+		// 	{ value: "1", name: "Semestre 1" },
+		// 	{ value: "2", name: "Semestre 2" },
+		//).setRequired(true))
 		.addUserOption(option => option.setName('user').setDescription('L\'utilisateur dont vous voulez voir les points.')),
 	async execute(interaction) {
 		const pool = require("../../db.js");
+		
+		await interaction.reply("Cette commande ne fonctionne pas pour l'instant, mais elle le sera très vite ! Demandez à <@349983254373466114> pour avoir la réponse à votre demande.");
+		return;
 		pool.getConnection(async function (err, connection) {
 			const user = interaction.options.getUser('user') ?? interaction.user;
 			const semestre = interaction.options.getString('semestre');
@@ -24,9 +29,9 @@ module.exports = {
 			let query;
 			console.log(semestre);
 			if (semestre == "1") {
-				query = 'SELECT pseudo, points, visibility, is_admin FROM old_users where user_id =';
+				query = 'SELECT pseudo, points, visibility, is_admin FROM users where id =';
 			} else if (semestre == "2") {
-				query = 'SELECT pseudo, points_s2, visibility, is_admin FROM old_users where user_id =';
+				query = 'SELECT pseudo, points_s2, visibility, is_admin FROM users where id =';
 			}
 			connection.query(query + user.id, async function (error, results) {
 				if (error) throw error;

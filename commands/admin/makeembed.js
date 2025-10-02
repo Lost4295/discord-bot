@@ -33,7 +33,7 @@ module.exports = {
         const description = interaction.options.getString('description');
         const footer = interaction.options.getString('footer');
         const image = interaction.options.getString('image');
-        const embed = EmbedBuilder()
+        const embed = new EmbedBuilder()
             .setTitle(title)
             .setDescription(description)
             .setFooter(footer)

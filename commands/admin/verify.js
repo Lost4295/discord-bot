@@ -1,3 +1,5 @@
+//TODO : refaire
+
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
@@ -9,6 +11,9 @@ module.exports = {
 	async execute(interaction) {
 		const pool = require("../../db.js");
 		pool.getConnection(async function (err, connection) {
+			
+		await interaction.reply("Cette commande ne fonctionne pas pour l'instant, mais elle le sera très vite ! Demandez à <@349983254373466114> pour avoir la réponse à votre demande.");
+		return;
 			await interaction.deferReply();
 			let errors = [];
 			connection.query('SELECT * from users order by points DESC', async function (error, resultats) {

@@ -23,7 +23,7 @@ module.exports = {
                         str = str.slice(2000);
                     }
                 } else {
-                    await interaction.reply({content:str});
+                    await interaction.editReply({content:str});
 
                 }
             });

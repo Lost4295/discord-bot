@@ -9,7 +9,8 @@ const client = new Client({ intents: [
 	GatewayIntentBits.Guilds,
 	GatewayIntentBits.GuildMessages,
 	GatewayIntentBits.MessageContent,
-	GatewayIntentBits.GuildIntegrations
+	GatewayIntentBits.GuildIntegrations,
+	GatewayIntentBits.GuildMembers
 ] });
 
 client.commands = new Collection();
@@ -46,5 +47,7 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
+
 // Log in to Discord with your client's TOKEN
 client.login(TOKEN);
+

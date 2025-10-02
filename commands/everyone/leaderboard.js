@@ -1,3 +1,5 @@
+//TODO : refaire
+
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
@@ -30,6 +32,9 @@ module.exports = {
 		const quizz = interaction.options.getBoolean('quizz') ?? false;
 		const full = interaction.options.getBoolean('full') ?? false;
 		const semestre = interaction.options.getString('semestre') ?? "1";
+		
+		await interaction.reply("Cette commande ne fonctionne pas pour l'instant, mais elle le sera très vite ! Demandez à <@349983254373466114> pour avoir la réponse à votre demande.");
+		return;
 		const pool = require("../../db.js");
 		pool.getConnection(async function (err, connection) {
 			await interaction.deferReply();

@@ -1,3 +1,5 @@
+//TODO : refaire
+
 const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 const fs = require('fs');
 const Buffer = require('buffer').Buffer;
@@ -13,6 +15,9 @@ module.exports = {
                 .setRequired(false))
         .setDMPermission(true),
     async execute(interaction) {
+        
+		await interaction.reply("Cette commande ne fonctionne pas pour l'instant, mais elle le sera très vite ! Demandez à <@349983254373466114> pour avoir la réponse à votre demande.");
+		return;
         const classe = interaction.options.getString('classe') ?? null;
         const pool = require("../../db.js");
         await interaction.deferReply();

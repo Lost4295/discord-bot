@@ -29,7 +29,7 @@ module.exports = {
 
             const pool = require("../../db.js");
             pool.getConnection(function (err, connection) {
-                connection.query('SELECT * FROM users where discord_id = ' + target.id, async function (error, results) {
+                connection.query('SELECT * FROM users where id = ' + target.id, async function (error, results) {
                     if (error) throw error;
                     console.log(results);
                     if (results[0] == null) {
@@ -39,12 +39,8 @@ module.exports = {
                     connection.query('INSERT INTO quizzpoints (user_id, points, date) VALUES (' + target.id + ', ' + pts + ', NOW())', async function (error, results) {
                         if (error) throw error;
                         console.log(results);
-                    });
-                    connection.query('UPDATE users SET quizzpoints = quizzpoints + ' + pts + ' where user_id = ' + target.id, async function (error, results) {
-                        if (error) throw error;
-                        console.log(results);
                         await interaction.reply({content: 'Points ( ' + pts + ' ) ajoutés avec succès à ' + target.username});
-                    })
+                    });
                 });
                 pool.releaseConnection(connection);
             });

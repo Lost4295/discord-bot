@@ -1,3 +1,5 @@
+//TODO : refaire
+
 const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 
 module.exports = {
@@ -15,6 +17,8 @@ module.exports = {
 				.setTimestamp()
 				.setFooter({ text: 'Couch Bot' });
 
+		await interaction.reply("Cette commande ne fonctionne pas pour l'instant, mais elle le sera très vite ! Demandez à <@349983254373466114> pour avoir la réponse à votre demande.");
+		return;
 			const member = interaction.guild.members.cache.get(interaction.user.id);
 			await interaction.deferReply();
 			connection.query('SELECT quizzpoints FROM users where discord_id = ' + user.id, async function (error, results) {
