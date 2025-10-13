@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -12,10 +12,10 @@ module.exports = {
     async execute(interaction) {
         const nombre = interaction.options.getInteger('nombre');
         if (nombre < 1 || nombre > 100) {
-            await interaction.reply({ content: 'Vous devez entrer un nombre entre 1 et 100.', ephemeral: true });
+            await interaction.reply({ content: 'Vous devez entrer un nombre entre 1 et 100.', flags: MessageFlags.Ephemeral });
         } else {
             await interaction.client.channels.cache.get(interaction.channel.id).bulkDelete(nombre);
-            await interaction.reply({ content: `J'ai effacé ${nombre} messages.`, ephemeral: true });
+            await interaction.reply({ content: `J'ai effacé ${nombre} messages.`, flags: MessageFlags.Ephemeral });
         }
     }
 }

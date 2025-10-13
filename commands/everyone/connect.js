@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -42,9 +42,9 @@ module.exports = {
 								connection.query('INSERT INTO images (user_id, image) VALUES (?, ?)', [interaction.user.id, img.url], async function (error) {
 									if (error) {
 										console.log(error);
-										await interaction.channel.send({ content: 'Il y a eu une erreur lors de l\'envoi de votre image. Merci de contacter l\'un des administrateurs.', ephemeral: true });
+										await interaction.channel.send({ content: 'Il y a eu une erreur lors de l\'envoi de votre image. Merci de contacter l\'un des administrateurs.', flags: MessageFlags.Ephemeral });
 									} else {
-										await interaction.channel.send({ content: 'Votre image a bien été envoyée !', ephemeral: true });
+										await interaction.channel.send({ content: 'Votre image a bien été envoyée !', flags: MessageFlags.Ephemeral });
 									}
 								});
 							}

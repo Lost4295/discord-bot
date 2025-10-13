@@ -22,7 +22,15 @@ module.exports = {
                 pool.releaseConnection(connection);
                 return;
             }
-            //TODO : si la personne n'existe pas dans la bdd, l'ajouter
+            connection.query('SELECT * FROM users WHERE id = ?', [cible.id], async function (error, results) {
+                if (error) throw error;
+                if (results.length === 0) {
+                    // Si l'utilisateur n'existe pas, l'ajouter
+                    connection.query('INSERT INTO users (id, pseudo, warns, classe, account_valid, nom, access_token, discord_id, date_inscr, roles, avatar, visibility, is_admin, email, prenom ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', [cible.id, cible.username, 0, 'define', 0, 'define', '', '', NOW(), '[]', '', 0, 0, 'define', 'define'], function (error) {
+                        if (error) throw error;
+                    });
+                }
+            });
             connection.query('UPDATE USERS SET warns = warns + 1 WHERE id = ?', [cible.id], async function (error) {
                 if (error) throw error;
                 await interaction.editReply({ content: `Avertissement de <@${cible.id}> pour comportement inapproprié.` });jy

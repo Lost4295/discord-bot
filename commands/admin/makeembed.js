@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, EmbedBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -28,7 +28,7 @@ module.exports = {
                 .setRequired(false))
         .setDMPermission(false),
     async execute(interaction) {
-        await interaction.deferReply({ ephemeral: true });
+        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
         const channel = interaction.channel;
         const title = interaction.options.getString('title');
         const description = interaction.options.getString('description');
@@ -40,7 +40,7 @@ module.exports = {
         .setFooter({ text: footer })
         .setImage(image)
         .setColor('#FF0000');
-        await interaction.editReply({content: 'Message envoyé !', ephemeral: true});
+        await interaction.editReply({content: 'Message envoyé !', flags: MessageFlags.Ephemeral});
         await channel.send({ embeds: [embed] });
     }
 };

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -16,6 +16,6 @@ module.exports = {
         )
             .catch(console.log);
 
-        interaction.reply({content: invite ? `Voilà un lien d'invitation temporaire : ${invite}` : "Une erreur s'est produite lors de la création de l'invitation. Merci de réessayer plus tard.", ephemeral: true});
+        interaction.reply({content: invite ? `Voilà un lien d'invitation temporaire : ${invite}` : "Une erreur s'est produite lors de la création de l'invitation. Merci de réessayer plus tard.", flags: MessageFlags.Ephemeral});
     }
 }

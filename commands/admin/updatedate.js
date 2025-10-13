@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 const dayjs = require('dayjs')
 const objectSupport = require("dayjs/plugin/objectSupport");
 dayjs.extend(objectSupport);
@@ -55,6 +55,12 @@ module.exports = {
 				.setMinValue(1)
 				.setMaxValue(31)
 				.setDescription('Le jour de l\'événement.'))
+		.addIntegerOption(option=>
+			option
+				.setName('hour')
+				.setMinValue(0)
+				.setMaxValue(23)
+				.setDescription('L\'heure de l\'événement.'))
 		.addBooleanOption(option =>
 			option
 				.setName('distanciel')
@@ -78,7 +84,7 @@ module.exports = {
 					if (error) throw error;
 					console.log(resultats);
 					if (resultats.length == 0) {
-						await interaction.reply({ content: 'L\'événement n\'existe pas.', ephemeral: true });
+						await interaction.reply({ content: 'L\'événement n\'existe pas.', flags: MessageFlags.Ephemeral });
 						return;
 					}
 					const dateres = new Date(Date.parse(resultats[0].date));
@@ -88,14 +94,15 @@ module.exports = {
 					const year = interaction.options.getInteger('year')??dateres.getFullYear();
 					const day = interaction.options.getInteger('day')??dateres.getDate();
 					const month = interaction.options.getInteger('month')??dateres.getMonth()+1;
+					const hour = interaction.options.getInteger('hour')??dateres.getHours();
 					const distanciel = interaction.options.getBoolean('distanciel')??resultats[0].distanciel;
-					const date = dayjs({ year: year, month: month - 1, day: day, hour: 14, minute: 0, second: 0, millisecond: 0 }).format('YYYY-MM-DD HH:mm:ss');
+					const date = dayjs({ year: year, month: month - 1, day: day, hour: hour, minute: 0, second: 0, millisecond: 0 }).format('YYYY-MM-DD HH:mm:ss');
 					console.log(date);
 					connection.query('UPDATE dates set title=?, description=?, date=TIMESTAMP(?), distanciel=? WHERE id =?', [title, description, date, distanciel, id],
 						async function (error, resultats) {
 							if (error) throw error;
 							console.log(resultats);
-							await interaction.editReply({ content: 'L\'événement a bien été modifié.', ephemeral: true });
+							await interaction.editReply({ content: 'L\'événement a bien été modifié.', flags: MessageFlags.Ephemeral });
 						});
 				});
 			pool.releaseConnection(connection);

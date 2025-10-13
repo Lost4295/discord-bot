@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -77,7 +77,7 @@ module.exports = {
 			await interaction.deferReply();
 			connection.query('SELECT * FROM users where id =' + interaction.user.id, async function (error) {
 				if (error) {
-					await interaction.reply({content:'Vous n\'êtes pas inscrit dans la base de données de Couch Bot.', ephemeral: true});
+					await interaction.reply({content:'Vous n\'êtes pas inscrit dans la base de données de Couch Bot.', flags: MessageFlags.Ephemeral});
 					return;
 				}
 				if (interaction.options.getSubcommandGroup() === 'visibility') {
@@ -92,7 +92,7 @@ module.exports = {
 							console.log(results);
 						});
 					}
-					await interaction.editReply({content:'Votre statut a bien été modifié.', ephemeral: true});
+					await interaction.editReply({content:'Votre statut a bien été modifié.', flags: MessageFlags.Ephemeral});
 				}
 				if (interaction.options.getSubcommandGroup() === 'pseudo') {
 					if (interaction.options.getSubcommand() === 'set') {
@@ -100,7 +100,7 @@ module.exports = {
 						connection.query('UPDATE users SET pseudo = ? WHERE id = ?', [pseudo, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.editReply({content:'Votre pseudo a bien été modifié.', ephemeral: true});
+							await interaction.editReply({content:'Votre pseudo a bien été modifié.', flags: MessageFlags.Ephemeral});
 						});
 					}
 				}
@@ -110,7 +110,7 @@ module.exports = {
 						connection.query('UPDATE users SET prenom = ? WHERE id = ?', [prenom, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.editReply({content:'Votre prénom a bien été modifié.', ephemeral: true});
+							await interaction.editReply({content:'Votre prénom a bien été modifié.', flags: MessageFlags.Ephemeral});
 						});
 					}
 				}
@@ -120,7 +120,7 @@ module.exports = {
 						connection.query('UPDATE users SET nom = ? WHERE id = ?', [nom, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.editReply({content:'Votre nom a bien été modifié.', ephemeral: true});
+							await interaction.editReply({content:'Votre nom a bien été modifié.', flags: MessageFlags.Ephemeral});
 						});
 					}
 				}
@@ -130,7 +130,7 @@ module.exports = {
 						connection.query('UPDATE users SET classe = ? WHERE id = ?', [classe, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
-							await interaction.editReply({content:'Votre classe a bien été modifiée.', ephemeral: true});
+							await interaction.editReply({content:'Votre classe a bien été modifiée.', flags: MessageFlags.Ephemeral});
 						});
 					}
 				}

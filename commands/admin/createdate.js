@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, MessageFlags } = require('discord.js');
 const dayjs = require('dayjs')
 const objectSupport = require("dayjs/plugin/objectSupport");
 dayjs.extend(objectSupport);
@@ -22,7 +22,6 @@ module.exports = {
 			option
 				.setName('year')
 				.setChoices(
-					{ name: '2024', value: 2024 },
 					{ name: '2025', value: 2025 },
 					{ name: '2026', value: 2026 },
 					{ name: '2027', value: 2027 },
@@ -55,6 +54,13 @@ module.exports = {
 				.setMaxValue(31)
 				.setDescription('Le jour de l\'événement.')
 				.setRequired(true))
+		.addIntegerOption(option =>
+			option
+				.setName('hour')
+				.setMinValue(0)
+				.setMaxValue(23)
+				.setDescription('L\'heure de l\'événement (heure de Paris).')
+				.setRequired(true))
 		.addBooleanOption(option =>
 			option
 				.setName('distanciel')
@@ -69,6 +75,7 @@ module.exports = {
 		const month = interaction.options.getInteger('month');
 		const day = interaction.options.getInteger('day');
 		const distanciel = interaction.options.getBoolean('distanciel');
+		const hour = interaction.options.getInteger('hour');
 
 		const pool = require("../../db.js");
 		pool.getConnection(function (err, connection) {
@@ -78,14 +85,14 @@ module.exports = {
 				pool.releaseConnection(connection);
 				return;
 			}
-		const date = dayjs({ year: year, month: month - 1, day: day, hour: 14, minute: 0, second:0, millisecond:0}).format('YYYY-MM-DD HH:mm:ss');
+		const date = dayjs({ year: year, month: month - 1, day: day, hour: hour, minute: 0, second:0, millisecond:0}).format('YYYY-MM-DD HH:mm:ss');
 		console.log(date);
 		
 		connection.query('INSERT INTO dates (title, description, date, distanciel) VALUES (?, ?, TIMESTAMP(?), ?)', [title, description, date, distanciel],
 			async function (error, resultats) {
 				if (error) throw error;
 				console.log(resultats);
-				await interaction.reply({ content: 'L\'événement a bien été ajouté.', ephemeral: true });
+				await interaction.reply({ content: 'L\'événement a bien été ajouté.', flags: MessageFlags.Ephemeral });
 			});
 			pool.releaseConnection(connection);
 		});
