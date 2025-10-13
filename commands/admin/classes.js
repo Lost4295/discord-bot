@@ -27,6 +27,7 @@ module.exports = {
 				if (messageLength > 2000) {
 					await interaction.editReply({content: message.slice(0, 2000)});
 					while (message.length > 0) {
+						if ( message.length == 0 ) break;
 						message = message.slice(2000);
 						await interaction.followUp({content: message.slice(0, 2000)});
 					}

@@ -13,18 +13,19 @@ module.exports = {
         .setDMPermission(false),
     async execute(interaction) {
         const cible = interaction.options.getUser('cible');
-        await interaction.reply({content:`Avertissement de <@${cible.id}> pour comportement inapproprié.`});
+        await interaction.deferReply();
         const pool = require("../../db.js");
         pool.getConnection(async function (err, connection) {
             if (err) {
                 console.log(err);
-                interaction.reply({content:'La base de données ne fonctionne pas.'});
+                interaction.reply({ content: 'La base de données ne fonctionne pas.' });
                 pool.releaseConnection(connection);
                 return;
             }
-            await interaction.deferReply();
+            //TODO : si la personne n'existe pas dans la bdd, l'ajouter
             connection.query('UPDATE USERS SET warns = warns + 1 WHERE id = ?', [cible.id], async function (error) {
                 if (error) throw error;
+                await interaction.editReply({ content: `Avertissement de <@${cible.id}> pour comportement inapproprié.` });jy
                 connection.query(
                     'SELECT warns FROM users where id = ?',
                     [cible.id],
@@ -32,7 +33,7 @@ module.exports = {
                         if (error) throw error;
                         console.log(results);
                         if (results[0].warns >= 3) {
-                            await interaction.followUp({content:`Expulsion de ${cible.username} pour avoir reçu 3 avertissements.`});
+                            await interaction.followUp({ content: `Expulsion de ${cible.username} pour avoir reçu 3 avertissements.` });
                             await interaction.guild.members.kick(cible);
                         }
                     });

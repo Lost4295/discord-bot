@@ -28,18 +28,19 @@ module.exports = {
                 .setRequired(false))
         .setDMPermission(false),
     async execute(interaction) {
+        await interaction.deferReply({ ephemeral: true });
         const channel = interaction.channel;
         const title = interaction.options.getString('title');
         const description = interaction.options.getString('description');
         const footer = interaction.options.getString('footer');
         const image = interaction.options.getString('image');
         const embed = new EmbedBuilder()
-            .setTitle(title)
-            .setDescription(description)
-            .setFooter(footer)
-            .setImage(image)
-            .setColor('#FF0000');
-
+        .setTitle(title)
+        .setDescription(description)
+        .setFooter({ text: footer })
+        .setImage(image)
+        .setColor('#FF0000');
+        await interaction.editReply({content: 'Message envoyé !', ephemeral: true});
         await channel.send({ embeds: [embed] });
     }
 };
