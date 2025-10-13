@@ -55,10 +55,11 @@ module.exports = {
                 interaction.editReply({ content: 'Vous n\'avez pas sélectionné de classe à temps.', components: [] });
             }
         });
-
+        
         const filter2 = i => i.customId === 'select2' && i.user.id === interaction.user.id;
         const collector2 = interaction.channel.createMessageComponentCollector({ filter2, componentType: ComponentType.StringSelect, time: 60000, max: 1 });
         collector2.on('collect', async i => {
+            await i.deferUpdate();
             const selected = i.values[0];
             await i.editReply({ content: `Vous avez sélectionné la classe : ${selected}. Bravo !`, components: [] });
             // Here you can handle the selected value, e.g., save it to a database
