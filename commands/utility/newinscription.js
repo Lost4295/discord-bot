@@ -6,7 +6,7 @@ const {
     ButtonBuilder,
     ButtonStyle,
     ComponentType,
-    MessageFlags,
+    ChannelType,
 } = require("discord.js");
 
 module.exports = {
@@ -16,21 +16,30 @@ module.exports = {
 
     async execute(interaction) {
         const user = interaction.user;
-        const channel = interaction.channel;
+        const parentChannel = interaction.channel;
 
-        await interaction.reply({
-            content: `👋 Salut ${user.username} ! On va faire ton inscription étape par étape.`,
-            flags: MessageFlags.Ephemeral,
+        // ✅ Crée un fil temporaire pour l'inscription
+        const thread = await parentChannel.threads.create({
+            name: `📝 inscription-${user.username}`,
+            autoArchiveDuration: 60, // 1h max
+            type: ChannelType.PrivateThread,
+            reason: `Inscription de ${user.username}`,
         });
 
-        // Fonction utilitaire pour poser une question texte et supprimer la réponse après
-        async function askQuestion(question, timeout = 60_000) {
-            const questionMessage = await channel.send({ content: question,
-            flags: MessageFlags.Ephemeral,
-             });
+        await thread.members.add(user.id);
 
+        await interaction.reply({
+            content: `👋 Salut ${user.username} ! J’ai créé un fil privé pour ton inscription. Rejoins-le ici : <#${thread.id}>`,
+            ephemeral: true,
+        });
+
+        await thread.send(`Bienvenue ${user}, on va faire ton inscription étape par étape 😄`);
+
+        // Fonction utilitaire pour poser une question et supprimer les messages
+        async function askQuestion(question, timeout = 60_000) {
+            const questionMsg = await thread.send(question);
             return new Promise((resolve, reject) => {
-                const collector = channel.createMessageCollector({
+                const collector = thread.createMessageCollector({
                     filter: m => m.author.id === user.id,
                     time: timeout,
                     max: 1,
@@ -38,14 +47,13 @@ module.exports = {
 
                 collector.on("collect", async msg => {
                     const response = msg.content.trim();
-                    // 🧹 Supprimer la réponse utilisateur + la question
-                    await Promise.allSettled([msg.delete(), questionMessage.delete()]);
+                    await Promise.allSettled([msg.delete(), questionMsg.delete()]);
                     resolve(response);
                 });
 
                 collector.on("end", collected => {
                     if (collected.size === 0) {
-                        questionMessage.delete().catch(() => { });
+                        questionMsg.delete().catch(() => { });
                         reject("Temps écoulé ⏰");
                     }
                 });
@@ -55,11 +63,11 @@ module.exports = {
         try {
             // Étape 1 — prénom
             const prenom = await askQuestion("➡️ Quel est ton **prénom** ?");
-            await channel.send({ content: `✅ Bonjour **${prenom}** !`, flags: MessageFlags.Ephemeral });
+            await thread.send(`✅ Bonjour **${prenom}** !`);
 
             // Étape 2 — nom
             const nom = await askQuestion("➡️ Et ton **nom de famille** ?");
-            await channel.send({ content: `Parfait, **${prenom} ${nom}**, enchanté 😄`, flags: MessageFlags.Ephemeral });
+            await thread.send(`Parfait, **${prenom} ${nom}**, enchanté 😄`);
 
             // Étape 3 — classe via menu déroulant
             const classes = [
@@ -75,31 +83,29 @@ module.exports = {
 
             const row = new ActionRowBuilder().addComponents(select);
 
-            const classMessage = await channel.send({
+            await thread.send({
                 content: "➡️ Maintenant, choisis ta **classe** :",
                 components: [row],
-                flags: MessageFlags.Ephemeral,
-            });
-
-            const selectCollector = channel.createMessageComponentCollector({
-                componentType: ComponentType.StringSelect,
-                time: 60_000,
-                max: 1,
-                filter: i => i.user.id === user.id,
             });
 
             const classe = await new Promise((resolve, reject) => {
-                selectCollector.on("collect", async i => {
+                const collector = thread.createMessageComponentCollector({
+                    componentType: ComponentType.StringSelect,
+                    time: 60_000,
+                    max: 1,
+                    filter: i => i.user.id === user.id,
+                });
+
+                collector.on("collect", async i => {
                     const choice = i.values[0];
                     await i.update({
                         content: `✅ Classe sélectionnée : **${choice}**`,
                         components: [],
-                        flags: MessageFlags.Ephemeral,
                     });
-
                     resolve(choice);
                 });
-                selectCollector.on("end", collected => {
+
+                collector.on("end", collected => {
                     if (collected.size === 0) reject("Aucune sélection effectuée ⏰");
                 });
             });
@@ -116,7 +122,7 @@ module.exports = {
                     .setStyle(ButtonStyle.Danger)
             );
 
-            await channel.send({
+            await thread.send({
                 content: `📝 **Récapitulatif :**  
 - Prénom : ${prenom}  
 - Nom : ${nom}  
@@ -124,10 +130,9 @@ module.exports = {
   
 Souhaites-tu confirmer ton inscription ?`,
                 components: [confirmRow],
-                flags: MessageFlags.Ephemeral,
             });
 
-            const buttonCollector = channel.createMessageComponentCollector({
+            const buttonCollector = thread.createMessageComponentCollector({
                 componentType: ComponentType.Button,
                 time: 60_000,
                 max: 1,
@@ -139,27 +144,32 @@ Souhaites-tu confirmer ton inscription ?`,
                     await i.update({
                         content: `🎉 Inscription confirmée pour **${prenom} ${nom}** en **${classe}** ! Bienvenue 👑`,
                         components: [],
-                        flags: MessageFlags.Ephemeral,
                     });
                     console.log(`✅ ${prenom} ${nom} inscrit en ${classe}`);
                 } else {
                     await i.update({
                         content: "❌ Inscription annulée.",
                         components: [],
-                        flags: MessageFlags.Ephemeral,
                     });
                     console.log(`❌ ${user.username} a annulé son inscription.`);
                 }
+
+                // 🧹 Supprime le fil après 5 secondes
+                setTimeout(() => {
+                    thread.delete(`Fin de l'inscription de ${user.username}`).catch(() => { });
+                }, 5000);
             });
 
             buttonCollector.on("end", collected => {
                 if (collected.size === 0) {
-                    channel.send("⏰ Aucun choix effectué. Inscription expirée.");
+                    thread.send("⏰ Aucun choix effectué. Inscription expirée.").then(() => {
+                        setTimeout(() => thread.delete().catch(() => { }), 5000);
+                    });
                 }
             });
         } catch (err) {
-            await channel.send(`❌ ${err}\nCommande annulée.`
-            );
+            await thread.send(`❌ ${err}\nCommande annulée.`);
+            setTimeout(() => thread.delete().catch(() => { }), 5000);
         }
     },
 };
