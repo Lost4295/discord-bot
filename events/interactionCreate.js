@@ -3,7 +3,8 @@ const { Events, Collection } = require('discord.js');
 module.exports = {
 	name: Events.InteractionCreate,
 	async execute(interaction) {
-		if (interaction.channel.id === '1283837518848196721' || interaction.channel.id === "772516231952990208" || interaction.member.roles.cache.some(role => role.name === 'Admin')) {
+		const channelId = interaction.channel.isThread() ? interaction.channel.parentId : interaction.channel.id;
+		if (channelId === '1283837518848196721' || channelId === "772516231952990208" || interaction.member.roles.cache.some(role => role.name === 'Admin')) {
 			const pool = require("../db.js");
 			pool.getConnection(async function (error, connection) {
 				if (error) {
@@ -15,7 +16,7 @@ module.exports = {
 					}
 				}
 				if (interaction.channel.id ==='772516231952990208' && interaction.commandName !== 'connect' && interaction.commandName !== "emergencyconnect" && !interaction.member.roles.cache.some(role => role.name === 'Admin')) {
-					await interaction.reply({ content: 'Vous n\'avez pas la permission d\'utiliser cette commande ici.', ephemeral: true });
+					await interaction.reply({ content: 'Vous n\'avez pas la permission d\'utiliser cette commande ici.', flags: MessageFlags.Ephemeral });
 					return;
 				}
 				connection.query('SELECT * FROM important WHERE name = "channel"', async function (error, results) {
@@ -37,12 +38,12 @@ module.exports = {
 								if (error) { 
 									console.log(error);
 									if (error.code === 'ER_DUP_ENTRY') {
-										await interaction.reply({ content: 'Vous êtes déjà inscrit. Si vous voulez modifier vos informations, veuillez exécuter la commande /settings.', ephemeral: true });
+										await interaction.reply({ content: 'Vous êtes déjà inscrit. Si vous voulez modifier vos informations, veuillez exécuter la commande /settings.', flags: MessageFlags.Ephemeral });
 									} else {
-										await interaction.reply({ content: 'Il y a eu une erreur lors de l\'inscription. Merci de contacter l\'un des administrateurs.', ephemeral: true });
+										await interaction.reply({ content: 'Il y a eu une erreur lors de l\'inscription. Merci de contacter l\'un des administrateurs.', flags: MessageFlags.Ephemeral });
 									}
 								} else {
-									await interaction.reply({ content: 'Vous avez bien été inscrit !', ephemeral: true });
+									await interaction.reply({ content: 'Vous avez bien été inscrit !', flags: MessageFlags.Ephemeral });
 								}
 							});
 					} else if (interaction.customId === 'question') {
@@ -80,7 +81,7 @@ module.exports = {
 
 						if (now < expirationTime) {
 							const expiredTimestamp = Math.round(expirationTime / 1_000);
-							return interaction.reply({ content: `Veuillez patienter, vous devez attendre avant de relancer \`${command.data.name}\`. Vous pouvez l'utiliser à nouveau <t:${expiredTimestamp}:R>.`, ephemeral: true });
+							return interaction.reply({ content: `Veuillez patienter, vous devez attendre avant de relancer \`${command.data.name}\`. Vous pouvez l'utiliser à nouveau <t:${expiredTimestamp}:R>.`, flags: MessageFlags.Ephemeral });
 						}
 					}
 					timestamps.set(interaction.user.id, now);
@@ -89,7 +90,7 @@ module.exports = {
 						console.log(
 							`/${interaction.commandName} — Par ${interaction.user.username}`)
 							// if (interaction.commandName !== "emergencyconnect"){
-							// 	await interaction.reply({ content: 'Le bot a un problème ! Vous ne pouvez pas utiliser cette commande pour le moment. ', ephemeral: true });
+							// 	await interaction.reply({ content: 'Le bot a un problème ! Vous ne pouvez pas utiliser cette commande pour le moment. ', flags: MessageFlags.Ephemeral });
 							// 	return;
 							// }
 						connection.query('SELECT user_id FROM blocked_users', async function (error, results) {
@@ -97,7 +98,7 @@ module.exports = {
 							for (let result of results) {
 								console.log(result.user_id, interaction.user.id, result.user_id == interaction.user.id);
 								if (result.user_id == interaction.user.id) {
-									await interaction.reply({ content: 'Vous êtes bloqué.', ephemeral: true });
+									await interaction.reply({ content: 'Vous êtes bloqué.', flags: MessageFlags.Ephemeral });
 									return;
 								}
 							}
@@ -111,16 +112,16 @@ module.exports = {
 							throw new Error("Random error, needs to restart...");
 						}
 						if (interaction.replied || interaction.deferred) {
-							await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+							await interaction.followUp({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
 						} else {
-							await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+							await interaction.reply({ content: 'There was an error while executing this command!', flags: MessageFlags.Ephemeral });
 						}
 						pool.releaseConnection(connection);
 					}
 				}
 			});
 		} else {
-			await interaction.reply({ content: 'Vous ne pouvez pas utiliser cette commande dans ce salon.', ephemeral: true });
+			await interaction.reply({ content: 'Vous ne pouvez pas utiliser cette commande dans ce salon.', flags: MessageFlags.Ephemeral });
 		}
 	}
 }
