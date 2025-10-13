@@ -1,4 +1,4 @@
-const { StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ComponentType, SlashCommandBuilder } = require('discord.js');
+const { StringSelectMenuBuilder, StringSelectMenuOptionBuilder, ActionRowBuilder, ComponentType, SlashCommandBuilder, Emoji } = require('discord.js');
 
 
 module.exports = {
@@ -12,11 +12,13 @@ module.exports = {
                 label: "1A",
                 description: "1A",
                 value: "1A",
+                emoji: "1️⃣"
             },
             {
                 label: "2A",
                 description: "2A",
                 value: "2A",
+                emoji: "2️⃣"
             }
         ]
         const menu = new StringSelectMenuBuilder()
