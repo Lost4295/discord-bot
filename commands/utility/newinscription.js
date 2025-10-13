@@ -42,9 +42,8 @@ module.exports = {
         const filter = i => i.customId === 'select' && i.user.id === interaction.user.id;
         const collector = interaction.channel.createMessageComponentCollector({ filter, componentType: ComponentType.StringSelect, time: 60000, max: 1 });
         collector.on('collect', async i => {
-            await i.deferUpdate();
             const selected = i.values[0];
-            await i.editReply({ content: `Vous avez sélectionné la classe : ${selected}. Maintenant refaites le ?`, components: [row2] });
+            await i.update({ content: `Vous avez sélectionné la classe : ${selected}. Maintenant refaites le ?`, components: [row2] });
             // Here you can handle the selected value, e.g., save it to a database
             console.log(`User selected: ${selected}`);
             text = `New inscription for class: ${selected
@@ -57,11 +56,10 @@ module.exports = {
         });
         
         const filter2 = i => i.customId === 'select2' && i.user.id === interaction.user.id;
-        const collector2 = interaction.channel.createMessageComponentCollector({ filter2, componentType: ComponentType.StringSelect, time: 60000, max: 1 });
+        const collector2 = interaction.channel.createMessageComponentCollector({ filter: filter2, componentType: ComponentType.StringSelect, time: 60000, max: 1 });
         collector2.on('collect', async i => {
-            await i.deferUpdate();
             const selected = i.values[0];
-            await i.editReply({ content: `Vous avez sélectionné la classe : ${selected}. Bravo !`, components: [] });
+            await i.update({ content: `Vous avez sélectionné la classe : ${selected}. Bravo !`, components: [] });
             // Here you can handle the selected value, e.g., save it to a database
             console.log(`User selected: ${selected}`);
             text = `New inscription for class: ${selected
