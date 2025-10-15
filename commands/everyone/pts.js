@@ -54,6 +54,8 @@ module.exports = {
 						await interaction.editReply({ content: 'Il n\'y a pas de dates enregistrées pour le trimestre ' + trimestre + ' et le niveau "' + niveau + '".' });
 						return;
 					}
+					let startDate = dates[0].date_debut;
+					let endDate = dates[0].date_fin;
 					// select sum(points.points) as Total, user_id from points group by user_id;
 					// SELECT u.id AS user_id, COALESCE(SUM(p.points), 0) AS total_points FROM users u LEFT JOIN points p ON p.user_id = u.id     AND p.date BETWEEN NOW()- INTERVAL 2 DAY AND NOW()  -- ta condition de date WHERE u.id = 1 GROUP BY u.id;
 					let exampleEmbed = new EmbedBuilder()
