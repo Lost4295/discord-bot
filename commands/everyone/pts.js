@@ -36,14 +36,14 @@ module.exports = {
 			connection.query('SELECT classe as niveau,pseudo,visibility,is_admin FROM users WHERE id = ?', [user.id], async function (error, theuser) {
 				if (error) throw error;
 				if (theuser.length == 0) {
-					await interaction.editReply({ content: user.username + ' n\'est inscrit dans la base de données de Couch Bot. ' });
+					await interaction.editReply({ content: user.username + ' n\'est pas inscrit dans la base de données de Couch Bot. ' });
 					return;
 				}
 				if (theuser[0].niveau == null) {
 					await interaction.editReply({ content: user.username + ' n\'a pas de classe enregistrée dans la base de données de Couch Bot. ' });
 					return;
 				}
-				if (theuser[0].visibility == 0 && interaction.user.id != user.id && !member.permissions.has(PermissionsBitField.Flags.Administrator)) {
+				if (theuser[0].visibility == 0 && interaction.user.id != user.id && !interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
 					await interaction.editReply({ content: user.username + ' a choisi de ne pas rendre ses points visibles.' });
 					return;
 				}
@@ -77,7 +77,7 @@ module.exports = {
 					let query2 = "SELECT u.id AS user_id,COALESCE(SUM(p.points), 0) AS total_points FROM users u LEFT JOIN points p ON p.user_id = u.id AND p.date BETWEEN ? AND ? WHERE u.id = ? GROUP BY u.id";
 					connection.query(query2, [startDate, endDate, user.id], async function (error, mypts) {
 
-						desc += ' actuellement ' + mypts[0].total_points + ' points.';
+						desc += ' actuellement ' + Number(mypts[0].total_points).toFixed(2) + ' points.';
 
 						if (mypts[0].total_points >= 4 && theuser[0].is_admin == 0) {
 							desc += " Votre note sera cependant limitée à 4 points.";
