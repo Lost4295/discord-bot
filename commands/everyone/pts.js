@@ -116,7 +116,7 @@ module.exports = {
 					)
 				});
 			});
+			pool.releaseConnection(connection);
 		});
-		pool.releaseConnection(connection);
 	}
 }
