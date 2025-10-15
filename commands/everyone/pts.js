@@ -21,13 +21,13 @@ module.exports = {
 			const trimestre = interaction.options.getString('trimestre');
 			switch (trimestre) {
 				case "1":
-					fq = "SELECT date_debut, date_fin FROM trimestre WHERE trimestre = 1 AND niveau = '?';";
+					fq = "SELECT date_debut, date_fin FROM trimestre WHERE trimestre = 1 AND niveau = ?;";
 					break;
 				case "2":
-					fq = "SELECT date_debut, date_fin FROM trimestre WHERE trimestre = 2 AND niveau = '?';";
+					fq = "SELECT date_debut, date_fin FROM trimestre WHERE trimestre = 2 AND niveau = ?;";
 					break;
 				case "3":
-					fq = "SELECT date_debut, date_fin FROM trimestre WHERE trimestre = 3 AND niveau = '?';";
+					fq = "SELECT date_debut, date_fin FROM trimestre WHERE trimestre = 3 AND niveau = ?;";
 					break;
 				default:
 					await interaction.editReply({ content: "Le trimestre doit être 1, 2 ou 3." });
