@@ -16,6 +16,7 @@ module.exports = {
 		const pool = require("../../db.js");
 		// await interaction.reply("Cette commande ne fonctionne pas pour l'instant, mais elle le sera très vite ! Demandez à <@349983254373466114> pour avoir la réponse à votre demande.");
 		pool.getConnection(async function (err, connection) {
+			await interaction.deferReply();
 			const user = interaction.options.getUser('user') ?? interaction.user;
 			const trimestre = interaction.options.getString('trimestre');
 			switch (trimestre) {
