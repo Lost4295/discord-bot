@@ -39,7 +39,7 @@ module.exports = {
 					await interaction.editReply({ content: user.username + ' n\'est inscrit dans la base de données de Couch Bot. ' });
 					return;
 				}
-				if (theuser[0].classe == null) {
+				if (theuser[0].niveau == null) {
 					await interaction.editReply({ content: user.username + ' n\'a pas de classe enregistrée dans la base de données de Couch Bot. ' });
 					return;
 				}
