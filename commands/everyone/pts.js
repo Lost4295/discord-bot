@@ -61,7 +61,6 @@ module.exports = {
 						.setThumbnail(user.avatarURL())
 						.setTimestamp()
 						.setFooter({ text: 'Couch Bot' });
-					await interaction.deferReply();
 					console.log(trimestre);
 					if (error) throw error;
 					console.log(results);
