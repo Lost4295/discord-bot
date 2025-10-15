@@ -63,7 +63,6 @@ module.exports = {
 						.setFooter({ text: 'Couch Bot' });
 					console.log(trimestre);
 					if (error) throw error;
-					console.log(results);
 					let desc;
 					if (interaction.user.id != user.id) {
 						desc = theuser[0].pseudo + ' a';
