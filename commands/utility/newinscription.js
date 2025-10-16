@@ -22,10 +22,10 @@ module.exports = {
         pool.getConnection(async function (err, connection) {
             if (err) throw err;
 
-            connection.query('SELECT * FROM users WHERE id = ?', [user.id], function (error, results) {
+            connection.query('SELECT * FROM users WHERE id = ?', [user.id], async function (error, results) {
                 if (error) throw error;
                 if (results.length > 0) {
-                    interaction.reply({ content: `Tu es déjà inscrit, ${user.username} ! Si tu souhaites mettre à jour tes informations, lance /settings.`, ephemeral: true });
+                    await interaction.reply({ content: `Tu es déjà inscrit, ${user.username} ! Si tu souhaites mettre à jour tes informations, lance /settings.`, ephemeral: true });
                     pool.releaseConnection(connection);
                     return;
                 }
