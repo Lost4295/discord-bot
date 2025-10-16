@@ -73,10 +73,13 @@ module.exports = {
             }
             function addUserToDatabase({ prenom, nom, classe }) {
                 const groupe = findGroup(classe);
-
+						let fclasse;
+						if (groupe){
+							fclasse = classe.substring(0, classe.length - 1);
+						}
                 connection.query(
                     'INSERT INTO users (pseudo, id, prenom, nom, classe, groupe, date_inscr) VALUES (?, ?, ?, ?, ?, ?, NOW())',
-                    [user.username, user.id, prenom, nom, classe, groupe],
+                    [user.username, user.id, prenom, nom, fclasse || classe, groupe],
                     function (error) {
                         if (error) {
                             throw new Error(error);

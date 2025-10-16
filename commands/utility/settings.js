@@ -251,8 +251,12 @@ module.exports = {
 							});
 						});
 						const groupe = findGroup(classe);
+						let fclasse;
+						if (groupe){
+							fclasse = classe.substring(0, classe.length - 1);
+						}
 
-						connection.query('UPDATE users SET classe = ?, groupe =? WHERE id = ?', [classe, groupe, interaction.user.id], async function (error, results) {
+						connection.query('UPDATE users SET classe = ?, groupe =? WHERE id = ?', [fclasse || classe, groupe, interaction.user.id], async function (error, results) {
 							if (error) throw error;
 							console.log(results);
 							await interaction.editReply({ content: 'Votre classe a bien été modifiée.', flags: MessageFlags.Ephemeral });
