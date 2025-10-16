@@ -79,11 +79,10 @@ module.exports = {
                     [user.username, user.id, prenom, nom, classe, groupe],
                     function (error) {
                         if (error) {
-                            return reject(error);
+                            throw new Error(error);
                         }
                         console.log(`Utilisateur ${prenom} ${nom} (${user.username}) ajouté à la base de données.`);
 
-                        resolve();
                     });
             }
 
