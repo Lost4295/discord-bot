@@ -3,9 +3,13 @@ const { ActionRowBuilder, ModalBuilder, TextInputBuilder, TextInputStyle, SlashC
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName('inscription')
-        .setDescription('Pour s\'inscrire à Couch Gaming.'),
+        .setName('/oldinscription-deprecated')
+        .setDescription('Pour s\'inscrire à Couch Gaming. (Commande dépréciée, utilisez /inscription)'),
     async execute(interaction) {
+        await interaction.deferReply({ content:"Désolé, on ne peut plus faire cette commande, mais si tu veux, réessaie avec /inscription !", ephemeral: true });
+        return;
+
+        //Flemme d'effacer j'avoue
         // Create the modal
         const modal = new ModalBuilder()
             .setCustomId('inscription')
