@@ -86,13 +86,15 @@ module.exports = {
                     });
             }
 
-            function findGroup(classe) {
-                const groupMatch = classe.match(/\d+([A-Z])/i);
-                if (groupMatch && groupMatch[1]) {
-                    return groupMatch[1].toUpperCase();
-                }
-                return null;
-            }
+    function findGroup(classe) {
+        const groupMatch = classe.match(/^\d[A-Z]+/);
+        if (groupMatch) {
+            let regex = new RegExp(groupMatch[0], 'g');
+            let res = classe.replace(regex, '');
+            return res;
+        }
+        return null;
+    }
 
             try {
                 // Étape 1 — prénom

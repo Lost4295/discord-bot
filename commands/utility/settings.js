@@ -123,9 +123,11 @@ module.exports = {
 				if (interaction.options.getSubcommandGroup() === 'classe') {
 					if (interaction.options.getSubcommand() === 'set') {
 						function findGroup(classe) {
-							const groupMatch = classe.match(/\d+([A-Z])/i);
-							if (groupMatch && groupMatch[1]) {
-								return groupMatch[1].toUpperCase();
+							const groupMatch = classe.match(/^\d[A-Z]+/);
+							if (groupMatch) {
+								let regex = new RegExp(groupMatch[0], 'g');
+								let res = classe.replace(regex, '');
+								return res;
 							}
 							return null;
 						}
