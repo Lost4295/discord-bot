@@ -240,7 +240,7 @@ module.exports = {
 							components: rows,
 						});
 						const classe = await new Promise((resolve, reject) => {
-							const collector = thread.createMessageComponentCollector({
+							const collector = channel.createMessageComponentCollector({
 								componentType: ComponentType.StringSelect,
 								time: 60_000,
 								max: 1,
