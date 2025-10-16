@@ -238,13 +238,14 @@ module.exports = {
 						await channel.send({
 							content: "Choisis ta **classe**, et fais bien attention ! Tu as le niveau, et le groupe :",
 							components: rows,
+							flags: MessageFlags.Ephemeral
 						});
 						const classe = await new Promise((resolve, reject) => {
 							const collector = channel.createMessageComponentCollector({
 								componentType: ComponentType.StringSelect,
 								time: 60_000,
 								max: 1,
-								filter: i => i.user.id === user.id,
+								filter: i => i.user.id === interaction.user.id,
 							});
 
 							collector.on("collect", async i => {
