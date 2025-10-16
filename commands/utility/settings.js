@@ -218,16 +218,26 @@ module.exports = {
 						];
 
 
-						const select = new StringSelectMenuBuilder()
-							.setCustomId("select_class")
-							.setPlaceholder("Sélectionne ta classe")
-							.addOptions(classes.map(c => new StringSelectMenuOptionBuilder(c)));
+						function buildSelectMenu(id, label, options) {
+							return new StringSelectMenuBuilder()
+								.setCustomId(id)
+								.setPlaceholder(label)
+								.addOptions(options);
+						}
 
-						const row = new ActionRowBuilder().addComponents(select);
+						const selects = [
+							buildSelectMenu("select_1A", "Première année", classes.filter(c => c.value.startsWith("1"))),
+							buildSelectMenu("select_2A", "Deuxième année", classes.filter(c => c.value.startsWith("2"))),
+							buildSelectMenu("select_3A", "Troisième année", classes.filter(c => c.value.startsWith("3"))),
+							buildSelectMenu("select_4A", "Quatrième année", classes.filter(c => c.value.startsWith("4"))),
+							buildSelectMenu("select_5A", "Cinquième année", classes.filter(c => c.value.startsWith("5"))),
+						];
+						const rows = selects.map(s => new ActionRowBuilder().addComponents(s));
+
 						const channel = await interaction.channel
 						await channel.send({
 							content: "Choisis ta **classe**, et fais bien attention ! Tu as le niveau, et le groupe :",
-							components: [row],
+							components: rows,
 						});
 						const classe = await new Promise((resolve, reject) => {
 							const collector = thread.createMessageComponentCollector({
@@ -252,7 +262,7 @@ module.exports = {
 						});
 						const groupe = findGroup(classe);
 						let fclasse;
-						if (groupe){
+						if (groupe) {
 							fclasse = classe.substring(0, classe.length - 1);
 						}
 
