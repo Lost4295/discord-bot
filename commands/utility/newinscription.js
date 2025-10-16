@@ -175,17 +175,25 @@ module.exports = {
                 { label: "5SRC3", description: "Cinquième année SRC Groupe 3", value: "5SRC3" },
                 { label: "5SRC4", description: "Cinquième année SRC Groupe 4", value: "5SRC4" },
             ];
+            function buildSelectMenu(id, label, options) {
+                return new StringSelectMenuBuilder()
+                    .setCustomId(id)
+                    .setPlaceholder(label)
+                    .addOptions(options);
+            }
 
-            const select = new StringSelectMenuBuilder()
-                .setCustomId("select_class")
-                .setPlaceholder("Sélectionne ta classe")
-                .addOptions(classes.map(c => new StringSelectMenuOptionBuilder(c)));
-
-            const row = new ActionRowBuilder().addComponents(select);
+            const selects = [
+                buildSelectMenu("select_1A", "Première année", classes.filter(c => c.value.startsWith("1"))),
+                buildSelectMenu("select_2A", "Deuxième année", classes.filter(c => c.value.startsWith("2"))),
+                buildSelectMenu("select_3A", "Troisième année", classes.filter(c => c.value.startsWith("3"))),
+                buildSelectMenu("select_4A", "Quatrième année", classes.filter(c => c.value.startsWith("4"))),
+                buildSelectMenu("select_5A", "Cinquième année", classes.filter(c => c.value.startsWith("5"))),
+            ];
+            const rows = selects.map(s => new ActionRowBuilder().addComponents(s));
 
             await thread.send({
                 content: "Maintenant, choisis ta **classe**, et fais bien attention ! Tu as le niveau, et le groupe (si tu ne le connais pas, c'est pas grave, tu pourras le modifier plus tard, du moment que l'année est correcte) :",
-                components: [row],
+                components: rows,
             });
 
             const classe = await new Promise((resolve, reject) => {
